@@ -6,3 +6,6 @@
 
 Поскольку каждый отвечает за свою часть, не будет возникать Merge Conflict при Merge.
 ## Функционал
+[Описание проекта](https://docs.google.com/document/d/1s6dP99IzJYPcG3f4WYiCwGJAqQC3J91okkQHRRr28us/edit?usp=sharing)
+## Инструкция
+Основной код лежит в директории app/src/main, тесты в app/src/androidTest и app/src/test соответственно. Проект выполняется в Android Studio.
