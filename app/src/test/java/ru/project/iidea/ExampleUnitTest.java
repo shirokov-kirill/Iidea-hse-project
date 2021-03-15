@@ -1,4 +1,4 @@
-package com.example.iidea;
+package ru.project.iidea;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;

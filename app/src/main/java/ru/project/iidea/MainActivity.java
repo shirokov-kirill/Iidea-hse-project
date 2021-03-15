@@ -1,4 +1,4 @@
-package com.example.iidea;
+package ru.project.iidea;
 
 import android.os.Bundle;
 
