@@ -1,6 +1,5 @@
 package ru.project.iidea;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,16 +13,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    public void onClick(View view) {
-        Intent intent = new Intent(this, MainScreenActivity.class);
-        startActivity(intent);
+        setContentView(R.layout.activity_mainscreen);
     }
 }

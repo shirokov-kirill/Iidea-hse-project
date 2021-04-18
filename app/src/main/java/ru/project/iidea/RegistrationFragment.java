@@ -1,5 +1,6 @@
 package ru.project.iidea;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,5 @@ public class RegistrationFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(RegistrationFragment.this)
-                        .navigate(R.id.action_RegistrationFragment_to_Fragment_MainScreen);
-            }
-        });
     }
 }

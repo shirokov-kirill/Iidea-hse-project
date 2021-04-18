@@ -11,17 +11,6 @@
         android:name="ru.project.iidea.RegistrationFragment"
         android:label="@string/registration_fragment_label"
         tools:layout="@layout/fragment_registration">
-
-        <action
-            android:id="@+id/action_RegistrationFragment_to_Fragment_MainScreen"
-            app:destination="@id/MainScreenFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/MainScreenFragment"
-        android:name="ru.project.iidea.MainScreenFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_mainscreen">
     </fragment>
 
 </navigation>

@@ -4,10 +4,24 @@
     <!-- Strings used for fragments for navigation -->
     <string name="registration_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
+    <string name="profile_label_editing">Profile Fragment Editing</string>
+    <string name="profile_label">Profile Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="TODO">TODO</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="todo">TODO</string>
+    <string name="Edit">Edit</string>
+    <string name="MySubs">Мои подписки</string>
+    <string name="UploadResume">Загрузить описание</string>
+    <string name="Profile">Profile</string>
+    <string name="Search">Search</string>
+    <string name="Interesting">Subs</string>
+    <string name="title_activity_main_screen">MainScreenActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 </resources>
