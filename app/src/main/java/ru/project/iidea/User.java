@@ -1,5 +1,7 @@
 package ru.project.iidea;
 
+import java.util.List;
+
 public class User {
     private long id;
     private String surname;
@@ -10,8 +12,10 @@ public class User {
     private String phoneNumber;
     private String description;
     private UserState state;
+    private List<ProjectType> subscriptions;
+    private List<Project> projects;
 
-    User(long id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state){
+    User(long id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state, List<ProjectType> subscriptions, List<Project> projects){
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -21,6 +25,45 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.description = description;
         this.state = state;
+        this.subscriptions = subscriptions;
+        this.projects = projects;
+    }
+
+    public List<ProjectType> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public boolean addSubscription(ProjectType type){
+        if(!subscriptions.contains(type)){
+            subscriptions.add(type);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeSubscription(ProjectType type){
+        if(subscriptions.contains(type)){
+            return subscriptions.remove(type);
+        }
+        return false;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public boolean addProject(Project project){
+        if(!projects.contains(project)){
+            return projects.add(project);
+        }
+        return false;
+    }
+
+    public boolean removeProject(Project project){
+        if(projects.contains(project)){
+            return projects.remove(project);
+        }
+        return false;
     }
 
     public void setSurname(String surname) {

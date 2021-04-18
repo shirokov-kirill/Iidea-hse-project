@@ -17,4 +17,11 @@
             app:destination="@id/ProfileFragmentEditing" />
     </fragment>
 
+    <fragment
+        android:id="@+id/ProfileFragmentView"
+        android:name="ru.project.iidea.ProfileFragmentView"
+        android:label="@string/profile_label_view"
+        tools:layout="@layout/fragment_profile_view">
+    </fragment>
+
 </navigation>

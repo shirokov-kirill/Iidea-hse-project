@@ -14,9 +14,8 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragmentEditing extends Fragment {
+public class ProfileFragmentView extends Fragment {
 
-    private LinearLayout profileListOfSubs;
     private LinearLayout profileProjects;
 
     @Override
@@ -30,31 +29,16 @@ public class ProfileFragmentEditing extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         User myUser = getUser(host_id);//TODO
-        TextView headLineName = view.findViewById(R.id.profileHeadLineName);
+        TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
-        headLineName.setText(fullName);//отсюда
-        TextView dateOfBirth = view.findViewById(R.id.profileDateOfBirth);
+        headLineName.setText(fullName);
+        TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirth);
         dateOfBirth.setText(myUser.getDateOfBirth());
-        TextView state = view.findViewById(R.id.profileUserStatus);
+        TextView state = view.findViewById(R.id.profileViewUserStatus);
         state.setText(myUser.getState().toString());
-        TextView email = view.findViewById(R.id.profileEmail);
+        TextView email = view.findViewById(R.id.profileViewEmail);
         email.setText(myUser.getEmail());
-        TextView phoneNumber = view.findViewById(R.id.profilePhoneNumber);
-        phoneNumber.setText(myUser.getPhoneNumber());
-        profileListOfSubs = view.findViewById(R.id.profileListOfSubs);
-        List<ProjectType> subscribes = myUser.getSubscriptions();
-        if(!subscribes.isEmpty()){
-            int i = 0;
-            for (ProjectType projectType : subscribes) {
-                i++;
-                TextView textView = new TextView(this.getContext());
-                textView.setText(projectType.toString());
-                textView.setTextSize(21);
-                textView.setId(i);
-                profileListOfSubs.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            }
-        }
-        profileProjects = view.findViewById(R.id.profileMyProjects);
+        profileProjects = view.findViewById(R.id.profileViewProjects);
         List<Project> projects = myUser.getProjects();
         if(!projects.isEmpty()){
             int i = 0;
