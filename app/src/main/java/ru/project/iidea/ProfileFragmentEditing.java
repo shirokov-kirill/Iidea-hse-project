@@ -29,7 +29,7 @@ public class ProfileFragmentEditing extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        User myUser = getUser(host_id);//TODO
+        User myUser = new User(1, "Shirokov", "Kirill", "", "25", "k.s.shirokov", "+7921...", "I'm good", UserState.SEEKING, new ArrayList<ProjectType>(), new ArrayList<Project>());//getUser(host_id);
         TextView headLineName = view.findViewById(R.id.profileHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);//отсюда
