@@ -16,8 +16,6 @@ import java.util.List;
 
 public class ProfileFragmentView extends Fragment {
 
-    private LinearLayout profileProjects;
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -33,12 +31,12 @@ public class ProfileFragmentView extends Fragment {
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);
         TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirth);
-        dateOfBirth.setText(myUser.getDateOfBirth());
+        dateOfBirth.setText(getString(R.string.Birthday, myUser.getDateOfBirth()));
         TextView state = view.findViewById(R.id.profileViewUserStatus);
-        state.setText(myUser.getState().toString());
+        state.setText(getString(R.string.Status, myUser.getState().toString()));
         TextView email = view.findViewById(R.id.profileViewEmail);
-        email.setText(myUser.getEmail());
-        profileProjects = view.findViewById(R.id.profileViewProjects);
+        email.setText(getString(R.string.Email, myUser.getEmail()));
+        LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
         List<Project> projects = myUser.getProjects();
         if(!projects.isEmpty()){
             int i = 0;

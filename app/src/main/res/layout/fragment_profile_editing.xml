@@ -63,13 +63,6 @@
                 android:text="@string/Edit"
                 android:textSize="21sp"/>
 
-            <Button
-                android:id="@+id/profileDateOfBirthChangeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/Edit"/>
-
             <TextView
                 android:id="@+id/profileEmail"
                 android:layout_marginTop="15dp"
@@ -78,13 +71,6 @@
                 android:text="@string/Edit"
                 android:textSize="21sp"/>
 
-            <Button
-                android:id="@+id/profileEmailChangeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/Edit"/>
-
             <TextView
                 android:id="@+id/profilePhoneNumber"
                 android:layout_marginTop="15dp"
@@ -92,13 +78,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/Edit"
                 android:textSize="21sp"/>
-
-            <Button
-                android:id="@+id/profilePhoneNumberChangeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/Edit"/>
 
             <Button
                 android:id="@+id/profileUploadResumeButton"

@@ -16,9 +16,6 @@ import java.util.List;
 
 public class ProfileFragmentEditing extends Fragment {
 
-    private LinearLayout profileListOfSubs;
-    private LinearLayout profileProjects;
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -34,14 +31,14 @@ public class ProfileFragmentEditing extends Fragment {
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);//отсюда
         TextView dateOfBirth = view.findViewById(R.id.profileDateOfBirth);
-        dateOfBirth.setText(myUser.getDateOfBirth());
+        dateOfBirth.setText(getString(R.string.Birthday, myUser.getDateOfBirth()));
         TextView state = view.findViewById(R.id.profileUserStatus);
-        state.setText(myUser.getState().toString());
+        state.setText(getString(R.string.Status, myUser.getState().toString()));
         TextView email = view.findViewById(R.id.profileEmail);
-        email.setText(myUser.getEmail());
+        email.setText(getString(R.string.Email, myUser.getEmail()));
         TextView phoneNumber = view.findViewById(R.id.profilePhoneNumber);
-        phoneNumber.setText(myUser.getPhoneNumber());
-        profileListOfSubs = view.findViewById(R.id.profileListOfSubs);
+        phoneNumber.setText(getString(R.string.PhoneNumber, myUser.getPhoneNumber()));
+        LinearLayout profileListOfSubs = view.findViewById(R.id.profileListOfSubs);
         List<ProjectType> subscribes = myUser.getSubscriptions();
         if(!subscribes.isEmpty()){
             int i = 0;
@@ -54,7 +51,7 @@ public class ProfileFragmentEditing extends Fragment {
                 profileListOfSubs.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         }
-        profileProjects = view.findViewById(R.id.profileMyProjects);
+        LinearLayout profileProjects = view.findViewById(R.id.profileMyProjects);
         List<Project> projects = myUser.getProjects();
         if(!projects.isEmpty()){
             int i = 0;
