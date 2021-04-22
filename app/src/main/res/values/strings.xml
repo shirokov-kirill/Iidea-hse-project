@@ -5,6 +5,7 @@
     <string name="registration_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="profile_label_editing">Profile Fragment Editing</string>
+    <string name="profile_label_view">Profile Fragment View</string>
     <string name="profile_label">Profile Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -13,8 +14,14 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="todo">TODO</string>
     <string name="Edit">Edit</string>
+    <string name="Description">Описание</string>
+    <string name="Email">Эл. почта</string>
+    <string name="MyProjects">Мои проекты</string>
+    <string name="DateOfBirth">День рождения</string>
     <string name="MySubs">Мои подписки</string>
     <string name="UploadResume">Загрузить описание</string>
+    <string name="Projects">Проекты</string>
+    <string name="Status">Статус</string>
     <string name="Profile">Profile</string>
     <string name="Search">Search</string>
     <string name="Interesting">Subs</string>
