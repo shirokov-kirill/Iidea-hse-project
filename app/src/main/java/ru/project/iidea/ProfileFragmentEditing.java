@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragmentEditing extends Fragment {
@@ -26,7 +25,7 @@ public class ProfileFragmentEditing extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        User myUser = new User(1, "Shirokov", "Kirill", "", "25", "k.s.shirokov", "+7921...", "I'm good", UserState.SEEKING, new ArrayList<ProjectType>(), new ArrayList<Project>());//getUser(host_id);
+        User myUser = (User) this.getArguments().get("user");
         TextView headLineName = view.findViewById(R.id.profileHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);//отсюда
