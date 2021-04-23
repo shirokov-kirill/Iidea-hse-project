@@ -1,6 +1,8 @@
 package ru.project.iidea;
 
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable {
     private ProjectType type;
     private String name;
     private String description;
