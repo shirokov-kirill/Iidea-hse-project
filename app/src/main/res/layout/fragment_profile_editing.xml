@@ -13,14 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/blue"
         app:layout_constraintBottom_toTopOf="@+id/profileInfoScrollView"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/profileHeadLineName"
             android:layout_width="0dp"
-            android:layout_height="33dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/Edit"
             android:textSize="27sp"/>
 
@@ -63,13 +67,6 @@
                 android:text="@string/Edit"
                 android:textSize="21sp"/>
 
-            <Button
-                android:id="@+id/profileDateOfBirthChangeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/Edit"/>
-
             <TextView
                 android:id="@+id/profileEmail"
                 android:layout_marginTop="15dp"
@@ -78,13 +75,6 @@
                 android:text="@string/Edit"
                 android:textSize="21sp"/>
 
-            <Button
-                android:id="@+id/profileEmailChangeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/Edit"/>
-
             <TextView
                 android:id="@+id/profilePhoneNumber"
                 android:layout_marginTop="15dp"
@@ -92,13 +82,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/Edit"
                 android:textSize="21sp"/>
-
-            <Button
-                android:id="@+id/profilePhoneNumberChangeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/Edit"/>
 
             <Button
                 android:id="@+id/profileUploadResumeButton"

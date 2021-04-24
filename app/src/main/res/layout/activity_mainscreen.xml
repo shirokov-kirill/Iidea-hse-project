@@ -22,19 +22,37 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <Button
+        <ImageButton
+            android:id="@+id/lower_menu_feed_button"
+            android:onClick="feedButtonOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="@string/Search"/>
+            android:maxHeight="10dp"/>
 
-        <Button
+        <ImageButton
+            android:id="@+id/lower_menu_search_button"
+            android:onClick="searchButtonOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
             android:text="@string/Interesting"/>
 
-        <Button
+        <ImageButton
+            android:id="@+id/lower_menu_responces_button"
+            android:onClick="responcesButtonOnClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Profile"/>
+
+        <ImageButton
+            android:id="@+id/lower_menu_myProjects_button"
+            android:onClick="myProjectsButtonOnClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Profile"/>
+
+        <ImageButton
+            android:id="@+id/lower_menu_profile_button"
+            android:onClick="profileButtonOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Profile"/>
