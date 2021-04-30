@@ -1,9 +1,12 @@
 package ru.project.iidea;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,12 +19,24 @@ import java.util.List;
 
 public class ProfileFragmentView extends Fragment {
 
+    ProfileFragmentViewInterface activity;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
         return inflater.inflate(R.layout.fragment_profile_editing, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof ProfileFragmentViewInterface){
+            activity = (ProfileFragmentViewInterface) context;
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override
@@ -34,8 +49,13 @@ public class ProfileFragmentView extends Fragment {
         dateOfBirth.setText(getString(R.string.Birthday, myUser.getDateOfBirth()));
         TextView state = view.findViewById(R.id.profileViewUserStatus);
         state.setText(getString(R.string.Status, myUser.getState().toString()));
-        TextView email = view.findViewById(R.id.profileViewEmail);
-        email.setText(getString(R.string.Email, myUser.getEmail()));
+        ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onBackButtonPressed();
+            }
+        });
         LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
         List<Project> projects = myUser.getProjects();
         if(!projects.isEmpty()){
