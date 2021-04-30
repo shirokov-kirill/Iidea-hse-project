@@ -21,7 +21,7 @@
             android:id="@+id/profileViewHeadLineBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:background="@drawable/back_button_image"/>
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="33dp"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:text="@string/Edit"
@@ -62,31 +62,13 @@
                 android:textSize="24sp"/>
 
             <TextView
-                android:id="@+id/profileViewUserStatus"
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@string/Edit"
-                android:textSize="21sp"/>
-
-            <TextView
                 android:id="@+id/profileViewDateOfBirthHead"
                 android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="@string/DateOfBirth"
+                android:text="@string/Birthday"
                 android:textSize="24sp"/>
-
-            <TextView
-                android:id="@+id/profileViewDateOfBirth"
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@string/Edit"
-                android:textSize="21sp"/>
 
             <TextView
                 android:id="@+id/profileViewDescriptionHead"

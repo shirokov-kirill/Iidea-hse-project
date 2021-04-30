@@ -45,9 +45,9 @@ public class ProfileFragmentView extends Fragment {
         TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);
-        TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirth);
+        TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirthHead);
         dateOfBirth.setText(getString(R.string.Birthday, myUser.getDateOfBirth()));
-        TextView state = view.findViewById(R.id.profileViewUserStatus);
+        TextView state = view.findViewById(R.id.profileViewUserStatusHead);
         state.setText(getString(R.string.Status, myUser.getState().toString()));
         ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +56,8 @@ public class ProfileFragmentView extends Fragment {
                 activity.onBackButtonPressed();
             }
         });
+        TextView description = view.findViewById(R.id.profileViewDescription);
+        description.setText(myUser.getDescription());
         LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
         List<Project> projects = myUser.getProjects();
         if(!projects.isEmpty()){
