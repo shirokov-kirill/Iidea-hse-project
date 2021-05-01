@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainScreenActivity extends AppCompatActivity {
+public class MainScreenActivity extends AppCompatActivity implements ProfileFragmentViewInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -182,5 +182,10 @@ public class MainScreenActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
         currentTag = FragmentTag.PROJECTS;
+    }
+
+    @Override
+    public void onBackButtonPressed() {
+        onBackPressed();
     }
 }
