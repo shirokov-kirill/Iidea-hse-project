@@ -34,4 +34,6 @@
     -->
     <string name="hello_world">Hello Square World!</string>
     <string name="feed">Лента</string>
+    <string name="Responses">Отклики</string>
+    <string name="NoResponses"> Нет откликов</string>
 </resources>
