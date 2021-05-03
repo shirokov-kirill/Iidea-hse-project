@@ -1,5 +1,7 @@
 plugins {
+    application
     kotlin("jvm") version "1.4.30"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 group = "org.example"
@@ -25,6 +27,11 @@ dependencies {
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+application {
+    mainClassName = "ru.project.iidea.ServerKt"
+    applicationName = "IIdea backend"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
