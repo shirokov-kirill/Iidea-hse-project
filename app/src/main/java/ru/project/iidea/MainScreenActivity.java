@@ -153,7 +153,17 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
     }
 
     public void responcesButtonOnClick(View view) {
-
+        if (currentTag == FragmentTag.RESPONCIES) {
+            return;
+        }
+        ResponsesFragment responsesFragment = new ResponsesFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("responses", new ArrayList<Response>());//TODO обращение к серверу
+        responsesFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).commit();
+        updateBottomLine(currentTag, FragmentTag.RESPONCIES);
+        currentTag = FragmentTag.RESPONCIES;
     }
 
     public void profileButtonOnClick(View view) {
