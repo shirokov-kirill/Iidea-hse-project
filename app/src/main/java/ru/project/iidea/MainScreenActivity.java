@@ -18,6 +18,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -149,7 +150,17 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
     }
 
     public void searchButtonOnClick(View view) {
-
+        if (currentTag == FragmentTag.SEARCH) {
+            return;
+        }
+        SearchFragment searchFragment = new SearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", myUser);
+        searchFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).commit();
+        updateBottomLine(currentTag, FragmentTag.SEARCH);
+        currentTag = FragmentTag.SEARCH;
     }
 
     public void responcesButtonOnClick(View view) {
@@ -187,5 +198,13 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
     @Override
     public void onBackButtonPressed() {
         onBackPressed();
+    }
+
+    public void searchFragmentButtonOnClick(View view) {
+        EditText askline =  getSupportFragmentManager().findFragmentByTag(currentTag.toString()).getView().findViewById(R.id.searchExpressionEditView);
+        String ask = askline.getText().toString();
+        if(!ask.equals("")){
+            //TODO запрос на сервер
+        }
     }
 }
