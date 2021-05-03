@@ -1,0 +1,6 @@
+{
+  "host": "localhost",
+  "database": "hse_project",
+  "user": "user",
+  "password": "pass"
+}
