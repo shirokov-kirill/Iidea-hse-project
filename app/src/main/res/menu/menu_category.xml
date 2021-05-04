@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ru.project.iidea.MainActivity">
+    <item
+        android:id="@+id/category_it"
+        android:orderInCategory="100"
+        android:title="@string/category_it"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/category_culture"
+        android:orderInCategory="100"
+        android:title="@string/category_culture"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/category_business"
+        android:orderInCategory="100"
+        android:title="@string/category_business"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/category_history"
+        android:orderInCategory="100"
+        android:title="@string/category_history"
+        app:showAsAction="never" />
+</menu>
