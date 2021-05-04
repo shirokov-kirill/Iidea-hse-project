@@ -42,6 +42,10 @@
     <string name="category_culture">Culture</string>
     <string name="category_business">Business</string>
     <string name="category_history">History</string>
+    <string name="userStatus_seeking">В поиске</string>
+    <string name="userStatus_notSeeking">Не ищу</string>
+    <string name="userStatus_working">Работаю</string>
+    <string name="Save">Сохранить</string>
     <string name="newProjectChooseCategory">Выберите категорию</string>
     <string name="project_create">Создать</string>
     <string name="Responses">Отклики</string>

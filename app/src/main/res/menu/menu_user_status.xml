@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ru.project.iidea.MainActivity">
+    <item
+        android:id="@+id/userStatus_seeking"
+        android:orderInCategory="100"
+        android:title="@string/userStatus_seeking"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/userStatus_notSeeking"
+        android:orderInCategory="100"
+        android:title="@string/userStatus_notSeeking"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/userStatus_working"
+        android:orderInCategory="100"
+        android:title="@string/userStatus_working"
+        app:showAsAction="never" />
+</menu>
