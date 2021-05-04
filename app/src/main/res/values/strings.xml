@@ -22,8 +22,8 @@
     <string name="UploadResume">Загрузить описание</string>
     <string name="Projects">Проекты</string>
     <string name="Status">Статус: %1$s</string>
-    <string name="Profile">Profile</string>
-    <string name="Search">Search</string>
+    <string name="Profile">Профиль</string>
+    <string name="Search">Поиск</string>
     <string name="Birthday">День рождения: %1$s</string>
     <string name="PhoneNumber">Телефон: %1$s</string>
     <string name="Interesting">Subs</string>
@@ -44,4 +44,6 @@
     <string name="category_history">History</string>
     <string name="newProjectChooseCategory">Выберите категорию</string>
     <string name="project_create">Создать</string>
+    <string name="Responses">Отклики</string>
+    <string name="NoResponses"> Нет откликов</string>
 </resources>

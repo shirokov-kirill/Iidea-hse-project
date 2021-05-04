@@ -18,6 +18,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -149,11 +150,31 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
     }
 
     public void searchButtonOnClick(View view) {
-
+        if (currentTag == FragmentTag.SEARCH) {
+            return;
+        }
+        SearchFragment searchFragment = new SearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", myUser);
+        searchFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).commit();
+        updateBottomLine(currentTag, FragmentTag.SEARCH);
+        currentTag = FragmentTag.SEARCH;
     }
 
     public void responcesButtonOnClick(View view) {
-
+        if (currentTag == FragmentTag.RESPONCIES) {
+            return;
+        }
+        ResponsesFragment responsesFragment = new ResponsesFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("responses", new ArrayList<Response>());//TODO обращение к серверу
+        responsesFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).commit();
+        updateBottomLine(currentTag, FragmentTag.RESPONCIES);
+        currentTag = FragmentTag.RESPONCIES;
     }
 
     public void profileButtonOnClick(View view) {
@@ -202,4 +223,11 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
         //TODO
     }
 
+    public void searchFragmentButtonOnClick(View view) {
+        EditText askline =  getSupportFragmentManager().findFragmentByTag(currentTag.toString()).getView().findViewById(R.id.searchExpressionEditView);
+        String ask = askline.getText().toString();
+        if(!ask.equals("")){
+            //TODO запрос на сервер
+        }
+    }
 }
