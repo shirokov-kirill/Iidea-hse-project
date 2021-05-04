@@ -26,7 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainScreenActivity extends AppCompatActivity implements ProfileFragmentViewInterface {
+public class MainScreenActivity
+        extends
+        AppCompatActivity
+        implements
+        ProfileFragmentViewInterface,
+        ProfileFragmentEditingInterface,
+        AddUserDescriptionFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -206,6 +212,20 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
     }
 
     @Override
+    public void onSaveButtonInAddUserDescriptionClicked(String newDescription){
+        getSupportFragmentManager().popBackStack();
+        //TODO отправить описание на сервер
+    }
+
+    @Override
+    public void onAddDescriptionButtonClicked() {
+        if(currentTag == FragmentTag.PROFILE){
+            AddUserDescriptionFragment addUserDescriptionFragment = new AddUserDescriptionFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, addUserDescriptionFragment, "addUserDescription").addToBackStack(null).commit();
+        }
+    }
+
+    @Override
     public void onBackButtonPressed() {
         onBackPressed();
     }
@@ -216,7 +236,7 @@ public class MainScreenActivity extends AppCompatActivity implements ProfileFrag
         bundle.putSerializable("user", myUser);
         newProjectFragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, newProjectFragment, FragmentTag.PROJECTS.toString()).commit();
+        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, newProjectFragment, "newProjectCreate").addToBackStack(null).commit();
     }
 
     public void createProject(View view) {
