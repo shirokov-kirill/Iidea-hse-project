@@ -1,5 +1,6 @@
 package ru.project.iidea;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.Gravity;
@@ -24,10 +25,20 @@ import static java.lang.Math.min;
 
 public class FeedFragment extends Fragment {
 
+    FeedFragmentInterface activity;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_feed, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FeedFragmentInterface){
+            activity = (FeedFragmentInterface) context;
+        }
     }
 
     @Override
@@ -41,14 +52,14 @@ public class FeedFragment extends Fragment {
         projects.add(new Project(ProjectType.Culture, "Second", "Description2", 0, ProjectState.New));
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
         final TableLayout tLayout = new TableLayout(this.getContext());
-        for (Project project : projects){
+        for (final Project project : projects){
             final TableLayout projectBlock = new TableLayout(this.getContext());
             projectBlock.setStretchAllColumns(true);
             projectBlock.setClickable(true);
             projectBlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO
+                    activity.onProjectBlockClicked(project);
                 }
             });
             TextView projectName = new TextView(this.getContext());

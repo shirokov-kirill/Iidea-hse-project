@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -34,7 +35,9 @@ public class MainScreenActivity
         ProfileFragmentViewInterface,
         ProfileFragmentEditingInterface,
         AddUserDescriptionFragmentInterface,
-        SearchFragmentInterface{
+        SearchFragmentInterface,
+        ProjectNotHostViewFragmentInterface,
+        FeedFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -144,10 +147,6 @@ public class MainScreenActivity
     }
 
     public void feedButtonOnClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 0){
-            fragmentManager.popBackStack();
-        }
         if (currentTag == FragmentTag.FEED) {
             return;
         }
@@ -155,16 +154,12 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         feedFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).commit();
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.FEED);
         currentTag = FragmentTag.FEED;
     }
 
     public void searchButtonOnClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 0){
-            fragmentManager.popBackStack();
-        }
         if (currentTag == FragmentTag.SEARCH) {
             return;
         }
@@ -172,16 +167,12 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         searchFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).commit();
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.SEARCH);
         currentTag = FragmentTag.SEARCH;
     }
 
     public void responcesButtonOnClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 0){
-            fragmentManager.popBackStack();
-        }
         if (currentTag == FragmentTag.RESPONCIES) {
             return;
         }
@@ -189,16 +180,12 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("responses", new ArrayList<Response>());//TODO обращение к серверу
         responsesFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).commit();
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.RESPONCIES);
         currentTag = FragmentTag.RESPONCIES;
     }
 
     public void profileButtonOnClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 0){
-            fragmentManager.popBackStack();
-        }
         if (currentTag == FragmentTag.PROFILE) {
             return;
         }
@@ -206,16 +193,12 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         profileFragmentEditing.setArguments(bundle);
-        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
         currentTag = FragmentTag.PROFILE;
     }
 
     public void myProjectsButtonOnClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 0){
-            fragmentManager.popBackStack();
-        }
         if (currentTag == FragmentTag.PROJECTS) {
             return;
         }
@@ -223,7 +206,7 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         myProjectsFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).commit();
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
         currentTag = FragmentTag.PROJECTS;
     }
@@ -276,5 +259,25 @@ public class MainScreenActivity
     @Override
     public void onAddSubscriptionClicked(View view, ProjectType type) {
         //TODO отправить на сервер + изменить стиль кнопки
+    }
+
+    @Override
+    public void onUserIdClicked(long userID) {
+        //TODO отправить запрос и получить User по ID
+        ProfileFragmentView profileFragmentView = new ProfileFragmentView();
+        User someUser = new User(2, "Ivanov", "XXX", "", "34", "abc@newEmail.ru", "88005553535", "Hello everyone.", UserState.SEEKING, new ArrayList<ProjectType>(), new ArrayList<Project>());//заглушка
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", someUser);
+        profileFragmentView.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentView, "showHostProfile").addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onProjectBlockClicked(Project project) {
+        ProjectNotHostViewFragment projectNotHostViewFragment = new ProjectNotHostViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("project", project);
+        projectNotHostViewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectNotHostViewFragment, "showProjectInfo").addToBackStack(null).commit();
     }
 }
