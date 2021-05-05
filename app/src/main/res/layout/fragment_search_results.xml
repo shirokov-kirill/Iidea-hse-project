@@ -9,41 +9,35 @@
     tools:context=".MainScreenActivity">
 
     <LinearLayout
-        android:id="@+id/searchHeadLine"
+        android:id="@+id/searchResultsHeadLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/blue">
 
+        <ImageButton
+            android:id="@+id/searchResultsViewHeadLineBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/back_button_image"/>
+
         <TextView
-            android:id="@+id/searchViewHeadLineName"
+            android:id="@+id/searchResultViewHeadLineName"
             android:layout_width="0dp"
             android:layout_height="33dp"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:text="@string/Search"
+            android:text="@string/Results"
             android:textColor="@color/white"
             android:textSize="27sp"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/clickableSearchButton"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/search_smth_button"/>
     </LinearLayout>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchExpressionEditView"/>
-
     <ScrollView
-        android:id="@+id/searchScrollView"
+        android:id="@+id/searchResultsScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +46,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/layoutForSearchRecs"
+            android:id="@+id/layoutForSearchResults"
             android:orientation="vertical"/>
     </ScrollView>
 </LinearLayout>

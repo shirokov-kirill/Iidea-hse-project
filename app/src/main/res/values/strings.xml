@@ -46,6 +46,8 @@
     <string name="userStatus_notSeeking">Не ищу</string>
     <string name="userStatus_working">Работаю</string>
     <string name="Save">Сохранить</string>
+    <string name="Results">Результаты</string>
+    <string name="Subscribe">Подписаться</string>
     <string name="newProjectChooseCategory">Выберите категорию</string>
     <string name="project_create">Создать</string>
     <string name="Responses">Отклики</string>

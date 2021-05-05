@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,8 @@ public class MainScreenActivity
         implements
         ProfileFragmentViewInterface,
         ProfileFragmentEditingInterface,
-        AddUserDescriptionFragmentInterface{
+        AddUserDescriptionFragmentInterface,
+        SearchFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -142,6 +144,10 @@ public class MainScreenActivity
     }
 
     public void feedButtonOnClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStack();
+        }
         if (currentTag == FragmentTag.FEED) {
             return;
         }
@@ -149,13 +155,16 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         feedFragment.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.FEED);
         currentTag = FragmentTag.FEED;
     }
 
     public void searchButtonOnClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStack();
+        }
         if (currentTag == FragmentTag.SEARCH) {
             return;
         }
@@ -163,13 +172,16 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         searchFragment.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.SEARCH);
         currentTag = FragmentTag.SEARCH;
     }
 
     public void responcesButtonOnClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStack();
+        }
         if (currentTag == FragmentTag.RESPONCIES) {
             return;
         }
@@ -177,13 +189,16 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("responses", new ArrayList<Response>());//TODO обращение к серверу
         responsesFragment.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.RESPONCIES);
         currentTag = FragmentTag.RESPONCIES;
     }
 
     public void profileButtonOnClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStack();
+        }
         if (currentTag == FragmentTag.PROFILE) {
             return;
         }
@@ -191,13 +206,16 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         profileFragmentEditing.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
         currentTag = FragmentTag.PROFILE;
     }
 
     public void myProjectsButtonOnClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStack();
+        }
         if (currentTag == FragmentTag.PROJECTS) {
             return;
         }
@@ -205,7 +223,6 @@ public class MainScreenActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
         myProjectsFragment.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragmentManager.findFragmentByTag(currentTag.toString())).add(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
         currentTag = FragmentTag.PROJECTS;
@@ -243,11 +260,21 @@ public class MainScreenActivity
         //TODO
     }
 
-    public void searchFragmentButtonOnClick(View view) {
+    @Override
+    public void onSearchButtonClicked(List<ProjectType> types) {
         EditText askline =  getSupportFragmentManager().findFragmentByTag(currentTag.toString()).getView().findViewById(R.id.searchExpressionEditView);
         String ask = askline.getText().toString();
         if(!ask.equals("")){
-            //TODO запрос на сервер
+            SearchResultsFragment searchResultsFragment = new SearchResultsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("projectTypes", (Serializable) types);
+            searchResultsFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, searchResultsFragment, "viewSearchResults").addToBackStack(null).commit();
         }
+    }
+
+    @Override
+    public void onAddSubscriptionClicked(View view, ProjectType type) {
+        //TODO отправить на сервер + изменить стиль кнопки
     }
 }

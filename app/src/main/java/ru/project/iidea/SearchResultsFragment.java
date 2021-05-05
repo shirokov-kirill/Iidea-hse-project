@@ -7,9 +7,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,14 +22,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchFragment extends Fragment {
-
+public class SearchResultsFragment extends Fragment {
     SearchFragmentInterface activity;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_search_results, container, false);
     }
 
     @Override
@@ -42,46 +43,30 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final EditText userText = view.findViewById(R.id.searchExpressionEditView);
-        ImageButton searchButton = view.findViewById(R.id.clickableSearchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        List<ProjectType> list = (List<ProjectType>) getArguments().getSerializable("projectTypes");
+        LinearLayout layout = view.findViewById(R.id.layoutForSearchResults);
+        for (final ProjectType projectType : list){
+            LinearLayout linearLayout = new LinearLayout(getActivity());
+            TextView textView = new TextView(getActivity());
+            textView.setTextSize(24);
+            textView.setText(projectType.toString());
+            linearLayout.addView(textView);
+            Button button = new Button(getActivity());
+            button.setText(R.string.Subscribe);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.onAddSubscriptionClicked(view, projectType);
+                }
+            });
+            linearLayout.addView(button);
+            layout.addView(linearLayout);
+        }
+        ImageButton backButton = view.findViewById(R.id.searchResultsViewHeadLineBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.onSearchButtonClicked(getTagsStartingWithText(userText.getText().toString()));
-            }
-        });
-        userText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String str = editable.toString();
-                List<String> projectTypeNames = getTagNamesStartingWithText(str);
-                LinearLayout searchRecs = view.findViewById(R.id.layoutForSearchRecs);
-                searchRecs.removeAllViews();
-                for (String projectTypeName : projectTypeNames){
-                    final TextView recomendation = new TextView(getContext());
-                    recomendation.setClickable(true);
-                    recomendation.setText(projectTypeName);
-                    recomendation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    recomendation.setTextSize(24);
-                    final EditText askLine = view.findViewById(R.id.searchExpressionEditView);
-                    recomendation.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            askLine.setText(recomendation.getText());
-                        }
-                    });
-                    searchRecs.addView(recomendation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                }
+                activity.onBackButtonPressed();
             }
         });
     }

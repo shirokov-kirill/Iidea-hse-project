@@ -2,7 +2,9 @@ package ru.project.iidea;
 
 import androidx.annotation.NonNull;
 
-public enum ProjectType {
+import java.io.Serializable;
+
+public enum ProjectType implements Serializable {
     IT,
     History,
     Business,
