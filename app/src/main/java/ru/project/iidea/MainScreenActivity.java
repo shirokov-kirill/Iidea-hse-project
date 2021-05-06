@@ -267,6 +267,7 @@ public class MainScreenActivity
         projectHostEdit.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostEdit, "projectHostEdit").addToBackStack(null).commit();
+    }
 
     @Override
     public void onUserIdClicked(long userID) {
