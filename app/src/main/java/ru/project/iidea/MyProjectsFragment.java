@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.List;
 import static java.lang.Math.min;
@@ -28,17 +29,22 @@ public class MyProjectsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
-        User myUser = (User) bundle.get("user");
+        final User myUser = (User) bundle.get("user");
         List<Project> projects = myUser.getProjects();
         ScrollView projectList = view.findViewById(R.id.myProjects_projects_scroll_view);
-        for (Project project : projects){
+        for (final Project project : projects){
             final LinearLayout projectBlock = new LinearLayout(this.getContext());
             projectBlock.setOrientation(LinearLayout.VERTICAL);
             projectBlock.setClickable(true);
             projectBlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO
+                    ProjectHostView projectHostView = new ProjectHostView();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("project", project);
+                    projectHostView.setArguments(bundle);
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostView, "projectHostView").addToBackStack(null).commit();
                 }
             });
             TextView projectName = new TextView(this.getContext());
