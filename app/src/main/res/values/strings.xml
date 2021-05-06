@@ -49,7 +49,10 @@
     <string name="Results">Результаты</string>
     <string name="Subscribe">Подписаться</string>
     <string name="newProjectChooseCategory">Выберите категорию</string>
+    <string name="projectType">Категория проекта: %1$s</string>
+    <string name="sendResponse">Откликнуться</string>
     <string name="project_create">Создать</string>
+    <string name="HostRef">Организатор: %1$s</string>
     <string name="Responses">Отклики</string>
     <string name="NoResponses"> Нет откликов</string>
     <string name="project">Проект</string>
