@@ -77,7 +77,7 @@ public class MainScreenActivity
         //Integer host_id = getIdByToken(this.getIntent().getExtras().getString("token"));//toServer
         //User myUser = getUserById(host_id);//toServer
         List<Project> projects = new ArrayList<>();
-        projects.add(new Project(ProjectType.IT, "FirstPr", "", 1, ProjectState.InProgress));
+        projects.add(new Project(ProjectType.IT, "FirstPr", "FirstPrDescription", 1, ProjectState.InProgress));
         myUser = new User(1, "Shirokov", "Kirill", "", "25", "k.s.shirokov@mail.ru", "+7921", "Hello everione. I created my own project. I want to do everithing well.", UserState.SEEKING, new ArrayList<ProjectType>(), projects);
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
@@ -260,6 +260,13 @@ public class MainScreenActivity
     public void onAddSubscriptionClicked(View view, ProjectType type) {
         //TODO отправить на сервер + изменить стиль кнопки
     }
+
+    public void editProject(View view) {
+        ProjectHostEdit projectHostEdit = new ProjectHostEdit();
+        Bundle bundle = getSupportFragmentManager().findFragmentByTag("projectHostView").getArguments();
+        projectHostEdit.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostEdit, "projectHostEdit").addToBackStack(null).commit();
 
     @Override
     public void onUserIdClicked(long userID) {
