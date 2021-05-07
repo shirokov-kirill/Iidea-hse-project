@@ -48,8 +48,8 @@ public class FeedFragment extends Fragment {
 //        User myUser = (User) bundle.get("user");
 //        List<Project> projects = myUser.getProjects();
         List<Project> projects = new ArrayList<>();
-        projects.add(new Project(ProjectType.IT, "First", "Description", 0, ProjectState.New));
-        projects.add(new Project(ProjectType.Culture, "Second", "Description2", 0, ProjectState.New));
+        projects.add(new Project(1, ProjectType.IT, "First", "Description", 0, ProjectState.New));
+        projects.add(new Project(2, ProjectType.Culture, "Second", "Description2", 0, ProjectState.New));
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
         final TableLayout tLayout = new TableLayout(this.getContext());
         for (final Project project : projects){
