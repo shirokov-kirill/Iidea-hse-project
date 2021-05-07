@@ -57,7 +57,7 @@ fun Route.projects() = route("project") {
             process(respond = null) { (params, caller) ->
                 val id = requireNotNull(params["id"]).int
                 val project = Project.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
-                if (project.host_id != caller) {
+                if (project.hostId != caller) {
                     return@process HttpStatusCode.Forbidden
                 }
                 transaction {
@@ -75,7 +75,7 @@ fun Route.projects() = route("project") {
             process(respond = null) { (params, caller) ->
                 val id = requireNotNull(params["id"]).int
                 val project = Project.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
-                if (project.host_id != caller) {
+                if (project.hostId != caller) {
                     return@process HttpStatusCode.Forbidden
                 }
                 transaction {

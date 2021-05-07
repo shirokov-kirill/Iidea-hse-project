@@ -8,17 +8,21 @@ import ru.project.iidea.dao.Users
 
 data class User(
     val id: Int,
-    val firstName: String,
+    val name: String,
     val surname: String,
     val patronymic: String,
     val email: String,
+    val dateOfBirth: String,
     val phoneNumber: String,
+    val description: String,
     val subscriptions: List<String>,
-    val status: String,
+    val state: String,
     val projects: List<Int>) {
 
     constructor(db: List<ResultRow>) : this(
         db.first()[Users.id],
+        "",
+        "",
         "",
         "",
         "",

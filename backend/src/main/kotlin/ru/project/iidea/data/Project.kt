@@ -9,7 +9,7 @@ data class Project(
     val id: Int,
     val type: String,
     val name: String,
-    val host_id: Int,
+    val hostId: Int,
     val description: String,
     val status: String
 ) {
