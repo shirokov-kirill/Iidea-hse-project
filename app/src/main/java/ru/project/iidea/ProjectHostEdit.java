@@ -1,11 +1,13 @@
 package ru.project.iidea;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -16,10 +18,20 @@ import androidx.fragment.app.Fragment;
 
 public class ProjectHostEdit extends Fragment {
 
+    ProjectHostEditInterface activity;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_project_host_edit, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof ProjectHostEditInterface){
+            activity = (ProjectHostEditInterface) context;
+        }
     }
 
     @Override
@@ -57,5 +69,13 @@ public class ProjectHostEdit extends Fragment {
         projectBlock.addView(projectDescription);
 
         scrollView.addView(projectBlock);
+
+        ImageButton imageButton = view.findViewById(R.id.projectHostEditHeadLineBackButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onBackButtonPressed();
+            }
+        });
     }
 }

@@ -38,7 +38,9 @@ public class MainScreenActivity
         SearchFragmentInterface,
         ProjectNotHostViewFragmentInterface,
         FeedFragmentInterface,
-        ResponseViewFragmentInterface{
+        ResponseViewFragmentInterface,
+        ProjectHostViewInterface,
+        ProjectHostEditInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -326,6 +328,10 @@ public class MainScreenActivity
                 return FragmentTag.PROJECTS;
             case "responcies":
                 return FragmentTag.RESPONCIES;
+            case "projectHostEdit":
+                return FragmentTag.PROJECTS;
+            case "projectHostView":
+                return FragmentTag.PROJECTS;
             default:
                 return FragmentTag.PROFILE;
         }

@@ -7,22 +7,30 @@
     android:layout_height="match_parent"
     tools:context=".MainScreenActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue">
+
+        <ImageButton
+            android:id="@+id/projectHostEditHeadLineBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/back_button_image"/>
 
         <TextView
             android:id="@+id/myProjects_head_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:text="@string/project"
             android:textColor="@color/white"
             android:textSize="27sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
