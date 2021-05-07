@@ -37,7 +37,8 @@ public class MainScreenActivity
         AddUserDescriptionFragmentInterface,
         SearchFragmentInterface,
         ProjectNotHostViewFragmentInterface,
-        FeedFragmentInterface{
+        FeedFragmentInterface,
+        ResponseViewFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,

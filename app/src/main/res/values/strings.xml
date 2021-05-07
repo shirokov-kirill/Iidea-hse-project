@@ -54,6 +54,10 @@
     <string name="project_create">Создать</string>
     <string name="HostRef">Организатор: %1$s</string>
     <string name="Responses">Отклики</string>
+    <string name="Response">Отклик</string>
+    <string name="FromUser">От пользователя:</string>
+    <string name="ProjectFrom">Проект:</string>
+    <string name="RejectResponse">Отклонить отклик</string>
     <string name="NoResponses"> Нет откликов</string>
     <string name="project">Проект</string>
     <string name="edit_host_project">Edit</string>
