@@ -42,6 +42,7 @@ public class ProfileFragmentView extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         User myUser = (User) this.getArguments().get("user");
+        List<Project> projects = (List<Project>) this.getArguments().get("userProjects");
         TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);
@@ -59,7 +60,6 @@ public class ProfileFragmentView extends Fragment {
         TextView description = view.findViewById(R.id.profileViewDescription);
         description.setText(myUser.getDescription());
         LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
-        List<Project> projects = myUser.getProjects();
         if(!projects.isEmpty()){
             int i = 0;
             for (Project project : projects) {
