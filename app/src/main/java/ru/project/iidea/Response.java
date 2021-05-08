@@ -5,21 +5,21 @@ import java.io.Serializable;
 import static java.lang.Math.min;
 
 public class Response implements Serializable {
-    long projectHostId;
-    long fromUserId;
+    int projectHostId;
+    int fromUserId;
     String projectName;
 
-    Response(long projectHostId, long fromUserId, String projectName){
+    Response(int projectHostId, int fromUserId, String projectName){
         this.projectHostId = projectHostId;
         this.fromUserId = fromUserId;
         this.projectName = projectName;
     }
 
-    public long getProjectHostId() {
+    public int getProjectHostId() {
         return projectHostId;
     }
 
-    public long getFromUserId() {
+    public int getFromUserId() {
         return fromUserId;
     }
 

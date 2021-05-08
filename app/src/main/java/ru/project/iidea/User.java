@@ -131,7 +131,7 @@ public class User implements Serializable {
         return state;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 }
