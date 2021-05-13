@@ -13,4 +13,20 @@ class ProjectUpdateRequest {
         this.description = description;
         this.status = status;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getType() {
+        return type;
+    }
 }

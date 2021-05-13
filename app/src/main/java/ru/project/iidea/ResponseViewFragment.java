@@ -36,9 +36,10 @@ public class ResponseViewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         final Response response = (Response) this.getArguments().get("response");
+        String projectName = this.getArguments().getString("projectName");
         TextView textView = view.findViewById(R.id.responseViewProjectName);
         TextView textView1 = view.findViewById(R.id.responseViewToUserPage);
-        textView.setText(response.getProjectName());
+        textView.setText(projectName);
         textView1.setText(String.valueOf(response.getFromUserId()));
         textView1.setClickable(true);
         textView1.setOnClickListener(new View.OnClickListener() {

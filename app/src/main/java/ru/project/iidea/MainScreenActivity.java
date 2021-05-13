@@ -47,7 +47,8 @@ public class MainScreenActivity
         ResponseViewFragmentInterface,
         ProjectHostViewInterface,
         ProjectHostEditInterface,
-        NewProjectFragmentInterface{
+        NewProjectFragmentInterface,
+        ResponsesFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -214,9 +215,6 @@ public class MainScreenActivity
             return;
         }
         SearchFragment searchFragment = new SearchFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        searchFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.SEARCH);
         currentTag = FragmentTag.SEARCH;
@@ -283,9 +281,6 @@ public class MainScreenActivity
 
     public void newProjectOnClick(View view) {
         NewProjectFragment newProjectFragment = new NewProjectFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        newProjectFragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, newProjectFragment, "newProjectCreate").addToBackStack(null).commit();
     }
@@ -399,6 +394,34 @@ public class MainScreenActivity
     }
 
     @Override
+    public void openCurrentResponse(ru.project.iidea.Response response) {
+        ResponseViewFragment responseViewFragment = new ResponseViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("response", response);
+        final Project[] projects = new Project[1];
+        Thread thread = new Thread( new Runnable(){
+            @Override
+            public void run() {
+                try{
+                    projects[0] = server.project(response.getProjectId()).execute().body();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        bundle.putString("projectName", projects[0].getName());
+        responseViewFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responseViewFragment, "responseView").addToBackStack(null).commit();
+    }
+
+    @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
@@ -433,6 +456,8 @@ public class MainScreenActivity
             case "projects":
                 return FragmentTag.PROJECTS;
             case "responcies":
+                return FragmentTag.RESPONCIES;
+            case "responseView":
                 return FragmentTag.RESPONCIES;
             case "projectHostEdit":
                 return FragmentTag.PROJECTS;
