@@ -36,7 +36,7 @@ import retrofit2.Response;
 
 public class MainScreenActivity
         extends
-        AppCompatActivity
+        BaseActivity
         implements
         ProfileFragmentViewInterface,
         ProfileFragmentEditingInterface,
