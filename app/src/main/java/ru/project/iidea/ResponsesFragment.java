@@ -1,5 +1,6 @@
 package ru.project.iidea;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,22 @@ import java.util.List;
 
 public class ResponsesFragment extends Fragment {
 
+    ResponsesFragmentInterface activity;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
         return inflater.inflate(R.layout.fragment_responses, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof ResponsesFragmentInterface){
+            activity = (ResponsesFragmentInterface) context;
+        }
     }
 
     @Override
@@ -37,7 +48,7 @@ public class ResponsesFragment extends Fragment {
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO
+                        activity.openCurrentResponse(response);
                     }
                 });
                 profileListOfSubs.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

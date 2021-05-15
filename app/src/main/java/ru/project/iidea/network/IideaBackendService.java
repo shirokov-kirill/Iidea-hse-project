@@ -17,10 +17,10 @@ public interface IideaBackendService {
     Call<List<Integer>> feed(@Path("id") int userId);
 
     @PUT("user/subscription/{tag}")
-    Call<Void> subscribe(String tag);
+    Call<Void> subscribe(@Path("tag") String tag);
 
     @DELETE("user/subscription/{tag}")
-    Call<Void> unsubscribe(String tag);
+    Call<Void> unsubscribe(@Path("tag") String tag);
 
     @GET("user/{id}/responses")
     Call<Integer> responsesFrom(@Path("id") int userId);
@@ -35,6 +35,9 @@ public interface IideaBackendService {
                                         @Nullable String description, @Nullable String status) {
         return updateProject(id, new ProjectUpdateRequest(name, type, description, status));
     }
+
+    @POST("project/search")
+    Call<List<Long>> searchProjects(@Body ProjectSearchRequest req);
 
     @PUT("project")
     Call<Integer> createProject(@Body ProjectUpdateRequest req);
@@ -58,4 +61,6 @@ public interface IideaBackendService {
 
     @DELETE("response/{id}")
     Call<Void> deleteResponse(@Path("id") int responseId);
+
+    //TODO Call<Void> modifyUserDescription(userId, String)
 }

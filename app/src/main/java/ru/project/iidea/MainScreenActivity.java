@@ -1,6 +1,7 @@
 package ru.project.iidea;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,14 +24,19 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import ru.project.iidea.network.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainScreenActivity
         extends
-        AppCompatActivity
+        BaseActivity
         implements
         ProfileFragmentViewInterface,
         ProfileFragmentEditingInterface,
@@ -40,7 +46,9 @@ public class MainScreenActivity
         FeedFragmentInterface,
         ResponseViewFragmentInterface,
         ProjectHostViewInterface,
-        ProjectHostEditInterface{
+        ProjectHostEditInterface,
+        NewProjectFragmentInterface,
+        ResponsesFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -71,19 +79,59 @@ public class MainScreenActivity
 
     private FragmentTag currentTag;
     private User myUser;
+    private List<Project> myUserProjects = null;
+    private IideaBackendService server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainscreen);
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
+        server = IideaBackend.getInstance().getService();
         //Integer host_id = getIdByToken(this.getIntent().getExtras().getString("token"));//toServer
-        //User myUser = getUserById(host_id);//toServer
-        List<Project> projects = new ArrayList<>();
-        projects.add(new Project(1, ProjectType.IT, "FirstPr", "FirstPrDescription", 1, ProjectState.InProgress));
-        myUser = new User(1, "Shirokov", "Kirill", "", "25", "k.s.shirokov@mail.ru", "+7921", "Hello everione. I created my own project. I want to do everithing well.", UserState.SEEKING, new ArrayList<ProjectType>(), projects);
+        //User myUser = server.user(host_id);
+        Thread thread1 = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try{
+                    myUser = server.user(1).execute().body();
+                    System.out.println(myUser);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread1.start();
+        try{
+            thread1.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        if(myUserProjects == null){
+            myUserProjects = new ArrayList<>();
+            final List<Integer> myUserProjectsIDs = myUser.getProjects();
+            Thread thread = new Thread( new Runnable(){
+                @Override
+                public void run() {
+                    for (Integer myUserProjectID : myUserProjectsIDs){
+                        try{
+                            myUserProjects.add(server.project(myUserProjectID).execute().body());
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            thread.start();
+            try{
+                thread.join();
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
+        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
         profileFragmentEditing.setArguments(bundle);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
@@ -167,9 +215,6 @@ public class MainScreenActivity
             return;
         }
         SearchFragment searchFragment = new SearchFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        searchFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.SEARCH);
         currentTag = FragmentTag.SEARCH;
@@ -195,6 +240,7 @@ public class MainScreenActivity
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
+        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
         profileFragmentEditing.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
@@ -207,7 +253,7 @@ public class MainScreenActivity
         }
         MyProjectsFragment myProjectsFragment = new MyProjectsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
+        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
         myProjectsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
@@ -235,15 +281,31 @@ public class MainScreenActivity
 
     public void newProjectOnClick(View view) {
         NewProjectFragment newProjectFragment = new NewProjectFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        newProjectFragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, newProjectFragment, "newProjectCreate").addToBackStack(null).commit();
     }
 
-    public void createProject(View view) {
-        //TODO
+    @Override
+    public void onCreateNewProjectClicked(final String projectType, final String name, final String description, final String projectState) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Integer id = server.createProject(name, projectType, description, projectState).execute().body();
+                    myUser.addProject(id);
+                    myUserProjects.add(new Project(id, ProjectType.valueOf(projectType), name, description, myUser.getId(), ProjectState.valueOf(projectState)));
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        onBackPressed();
     }
 
     @Override
@@ -273,12 +335,51 @@ public class MainScreenActivity
     }
 
     @Override
-    public void onUserIdClicked(long userID) {
-        //TODO отправить запрос и получить User по ID
+    public void onUserIdClicked(final int userID) {
+        final User[] user = {null};
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    user[0] = server.user(userID).execute().body();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        if(user[0] == null){
+            return;
+        }
+        final List<Project> list = new ArrayList<>();
+        final List<Integer> listId = user[0].getProjects();
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (Integer i : listId){
+                    try {
+                        list.add(server.project(i).execute().body());
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        thread1.start();
+        try {
+            thread1.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
         ProfileFragmentView profileFragmentView = new ProfileFragmentView();
-        User someUser = new User(2, "Ivanov", "XXX", "", "34", "abc@newEmail.ru", "88005553535", "Hello everyone.", UserState.SEEKING, new ArrayList<ProjectType>(), new ArrayList<Project>());//заглушка
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", someUser);
+        bundle.putSerializable("user", user[0]);
+        bundle.putSerializable("userProjects", (Serializable) list);
         profileFragmentView.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentView, "showHostProfile").addToBackStack(null).commit();
     }
@@ -290,6 +391,34 @@ public class MainScreenActivity
         bundle.putSerializable("project", project);
         projectNotHostViewFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectNotHostViewFragment, "showProjectInfo").addToBackStack(null).commit();
+    }
+
+    @Override
+    public void openCurrentResponse(ru.project.iidea.Response response) {
+        ResponseViewFragment responseViewFragment = new ResponseViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("response", response);
+        final Project[] projects = new Project[1];
+        Thread thread = new Thread( new Runnable(){
+            @Override
+            public void run() {
+                try{
+                    projects[0] = server.project(response.getProjectId()).execute().body();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        try{
+            thread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        bundle.putString("projectName", projects[0].getName());
+        responseViewFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responseViewFragment, "responseView").addToBackStack(null).commit();
     }
 
     @Override
@@ -327,6 +456,8 @@ public class MainScreenActivity
             case "projects":
                 return FragmentTag.PROJECTS;
             case "responcies":
+                return FragmentTag.RESPONCIES;
+            case "responseView":
                 return FragmentTag.RESPONCIES;
             case "projectHostEdit":
                 return FragmentTag.PROJECTS;

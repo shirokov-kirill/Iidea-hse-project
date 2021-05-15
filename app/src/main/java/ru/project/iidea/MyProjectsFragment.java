@@ -29,8 +29,7 @@ public class MyProjectsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
-        final User myUser = (User) bundle.get("user");
-        List<Project> projects = myUser.getProjects();
+        final List<Project> projects = (List<Project>) bundle.get("userProjects");
         ScrollView projectList = view.findViewById(R.id.myProjects_projects_scroll_view);
         for (final Project project : projects){
             final LinearLayout projectBlock = new LinearLayout(this.getContext());

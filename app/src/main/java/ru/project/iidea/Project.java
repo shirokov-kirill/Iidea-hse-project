@@ -7,10 +7,10 @@ public class Project implements Serializable {
     private ProjectType type;
     private String name;
     private String description;
-    private long hostId;
+    private int hostId;
     private ProjectState status;
 
-    Project(int id, ProjectType type, String name, String description, long hostId, ProjectState status){
+    Project(int id, ProjectType type, String name, String description, int hostId, ProjectState status){
         this.id = id;
         this.type = type;
         this.name = name;
@@ -31,7 +31,7 @@ public class Project implements Serializable {
         return name;
     }
 
-    public long getHostId() {
+    public int getHostId() {
         return hostId;
     }
 

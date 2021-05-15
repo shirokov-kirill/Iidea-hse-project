@@ -1,11 +1,13 @@
 package ru.project.iidea;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,10 +16,21 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 public class NewProjectFragment extends Fragment {
+
+    NewProjectFragmentInterface activity;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_new_project, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof NewProjectFragmentInterface){
+            activity = (NewProjectFragmentInterface) context;
+        }
     }
 
     @Override
@@ -53,5 +66,18 @@ public class NewProjectFragment extends Fragment {
                 popupMenu.show();
             }
         });
+        final EditText editText = view.findViewById(R.id.edit_new_project_description);
+        final EditText editText1 = view.findViewById(R.id.edit_new_project_name);
+        Button button = view.findViewById(R.id.button3);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onCreateNewProjectClicked(categoryButton.getText().toString(), editText1.getText().toString(), editText.getText().toString(),ProjectState.New.toString());
+            }
+        });
+    }
+
+    private int generateRandomID(){
+        return 0;//TODO
     }
 }
