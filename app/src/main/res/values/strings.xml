@@ -63,4 +63,8 @@
     <string name="NoResponses"> Нет откликов</string>
     <string name="project">Проект</string>
     <string name="edit_host_project">Edit</string>
+    <string name="project_status_new">New</string>
+    <string name="project_status_finished">Finished</string>
+    <string name="project_status_in_progress">In progress</string>
+    <string name="project_status_search">Search</string>
 </resources>
