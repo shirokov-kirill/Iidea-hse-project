@@ -21,9 +21,16 @@ import androidx.fragment.app.Fragment;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.project.iidea.network.IideaBackendService;
+import ru.project.iidea.network.NetworkConnectionChecker;
+
 public class ProfileFragmentEditing extends Fragment {
 
     ProfileFragmentEditingInterface activity;
+    IideaBackendService server;
 
     @Override
     public View onCreateView(
@@ -43,8 +50,8 @@ public class ProfileFragmentEditing extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        User myUser = (User) this.getArguments().get("user");
-        List<Project> projects = (List<Project>) this.getArguments().get("userProjects");
+        User myUser = (User) this.getArguments().getSerializable("user");
+        server = (IideaBackendService) this.getArguments().getSerializable("server");
         TextView headLineName = view.findViewById(R.id.profileHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);//отсюда
@@ -105,15 +112,27 @@ public class ProfileFragmentEditing extends Fragment {
             }
         }
         LinearLayout profileProjects = view.findViewById(R.id.profileMyProjects);
-        if(!projects.isEmpty()){
-            int i = 0;
-            for (Project project : projects) {
-                i++;
-                TextView textView = new TextView(this.getContext());
-                textView.setText(project.getName());
-                textView.setTextSize(21);
-                textView.setId(i);
-                profileProjects.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        List<Long> projectIDs = myUser.getProjects();
+        for (long projectID : projectIDs){
+            if(NetworkConnectionChecker.isNetworkAvailable(this.getContext())){
+                server.project(projectID).enqueue(new Callback<Project>() {
+                    @Override
+                    public void onResponse(Call<Project> call, Response<Project> response) {
+                        if(response.isSuccessful() && response.body() != null){
+                            TextView textView = new TextView(getContext());
+                            textView.setText(response.body().getName());
+                            textView.setTextSize(21);
+                            profileProjects.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Project> call, Throwable t) {
+
+                    }
+                });
+            } else {
+                activity.showToast("No Internet Connection.");
             }
         }
         super.onViewCreated(view, savedInstanceState);

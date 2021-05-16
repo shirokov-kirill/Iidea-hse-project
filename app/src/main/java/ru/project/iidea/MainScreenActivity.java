@@ -48,7 +48,8 @@ public class MainScreenActivity
         ProjectHostViewInterface,
         ProjectHostEditInterface,
         NewProjectFragmentInterface,
-        ResponsesFragmentInterface{
+        ResponsesFragmentInterface,
+        MyProjectsFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -79,7 +80,6 @@ public class MainScreenActivity
 
     private FragmentTag currentTag;
     private User myUser;
-    private List<Project> myUserProjects = null;
     private IideaBackendService server;
 
     @Override
@@ -88,8 +88,6 @@ public class MainScreenActivity
         setContentView(R.layout.activity_mainscreen);
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         server = IideaBackend.getInstance().getService();
-        //Integer host_id = getIdByToken(this.getIntent().getExtras().getString("token"));//toServer
-        //User myUser = server.user(host_id);
         Thread thread1 = new Thread(new Runnable(){
             @Override
             public void run() {
@@ -107,31 +105,9 @@ public class MainScreenActivity
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-        if(myUserProjects == null){
-            myUserProjects = new ArrayList<>();
-            final List<Long> myUserProjectsIDs = myUser.getProjects();
-            Thread thread = new Thread( new Runnable(){
-                @Override
-                public void run() {
-                    for (Long myUserProjectID : myUserProjectsIDs){
-                        try{
-                            myUserProjects.add(server.project(myUserProjectID).execute().body());
-                        }catch (IOException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-            thread.start();
-            try{
-                thread.join();
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
-        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
+        bundle.putSerializable("server", server);
         profileFragmentEditing.setArguments(bundle);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
@@ -241,7 +217,7 @@ public class MainScreenActivity
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
-        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
+        bundle.putSerializable("server", server);
         profileFragmentEditing.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
@@ -254,7 +230,8 @@ public class MainScreenActivity
         }
         MyProjectsFragment myProjectsFragment = new MyProjectsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
+        bundle.putSerializable("userID", myUser.getId());
+        bundle.putSerializable("server", server);
         myProjectsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
@@ -278,6 +255,31 @@ public class MainScreenActivity
     @Override
     public void onBackButtonPressed() {
         onBackPressed();
+    }
+
+    @Override
+    public void onSaveProjectPressed(String name, String description, String state, String type, long id) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.updateProject(id, name, type, description, state).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        onBackButtonPressed();
+                        onBackButtonPressed();
+                        showToast("Successfully modified.");
+                    } else {
+                        onFailure(call, new IOException("some error happened."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
+        }
     }
 
     @Override
@@ -318,7 +320,6 @@ public class MainScreenActivity
                     if(response.isSuccessful() && response.body() != null){
                         long id = response.body();
                         myUser.addProject(id);
-                        myUserProjects.add(new Project(id, ProjectType.valueOf(projectType), name, description, myUser.getId(), ProjectState.valueOf(projectState)));
                         onBackButtonPressed();
                     } else {
                         onFailure(call, new IOException("Error in server connection."));

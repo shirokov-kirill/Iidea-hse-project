@@ -17,7 +17,7 @@ public enum ProjectState {
             case Finished:
                 return "Finished";
             case InProgress:
-                return "In Progress";
+                return "InProgress";
             case Search:
                 return "Search";
         }
