@@ -17,7 +17,8 @@ data class User(
     val description: String,
     val subscriptions: List<String>,
     val state: String,
-    val projects: List<Int>) {
+    val projects: List<Int>
+) {
 
     constructor(db: List<ResultRow>) : this(
         db.first()[Users.id],
@@ -38,12 +39,12 @@ data class User(
 
         fun fromDatabase(id: Int): User? = transaction {
 
-            val res = (Users leftJoin  Subscriptions leftJoin Projects)
+            val res = (Users leftJoin Subscriptions leftJoin Projects)
                 .slice(Users.id, Users.status, Subscriptions.subscription, Projects.id)
                 .select {
                     Users.id.eq(id)
                 }.toList()
-            return@transaction if(res.isNotEmpty()) User(res) else null
+            return@transaction if (res.isNotEmpty()) User(res) else null
         }
 
     }

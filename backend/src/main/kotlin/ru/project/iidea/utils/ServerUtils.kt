@@ -10,6 +10,7 @@ import io.ktor.util.pipeline.*
 import ru.project.iidea.UserPrincipal
 
 typealias Ctx = PipelineContext<Unit, ApplicationCall>
+
 data class RequestCtx(val params: JsonObject, val sender: Int)
 
 private fun Parameters.toJson(): JsonObject = json {
@@ -18,12 +19,18 @@ private fun Parameters.toJson(): JsonObject = json {
     }
 }
 
-suspend fun <T> Ctx.process(notFoundForEmpty: Boolean = true, respond: ((T) -> Any?)? = { it }, func: suspend (RequestCtx) -> T) {
+suspend fun <T> Ctx.process(
+    notFoundForEmpty: Boolean = true,
+    respond: ((T) -> Any?)? = { it },
+    func: suspend (RequestCtx) -> T
+) {
     try {
         val params = call.parameters.toJson()
         if (call.request.httpMethod != HttpMethod.Get
-            && call.request.contentType() == ContentType.Application.Json) {
-            params.merge(call.receive())
+            && call.request.contentType().withoutParameters() == ContentType.Application.Json
+        ) {
+            val body = call.receive<JsonObject>()
+            params.merge(body)
         }
         val caller = requireNotNull(call.principal<UserPrincipal>()).id
         val result = func(RequestCtx(params, caller))
@@ -33,7 +40,7 @@ suspend fun <T> Ctx.process(notFoundForEmpty: Boolean = true, respond: ((T) -> A
             }
             call.respond(respond(result) ?: HttpStatusCode.NotFound)
         } else {
-            if(result is HttpStatusCode) {
+            if (result is HttpStatusCode) {
                 call.respond(result)
             } else {
                 call.respond(HttpStatusCode.OK)
