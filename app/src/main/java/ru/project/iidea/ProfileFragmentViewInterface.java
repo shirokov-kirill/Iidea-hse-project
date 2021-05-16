@@ -4,6 +4,7 @@ import android.view.View;
 
 public interface ProfileFragmentViewInterface {
 
-    void onBackButtonPressed();
+    public void onBackButtonPressed();
+    public void showToast(String message);
 
 }

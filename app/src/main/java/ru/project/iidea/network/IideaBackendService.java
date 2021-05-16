@@ -6,15 +6,16 @@ import retrofit2.http.*;
 import ru.project.iidea.Project;
 import ru.project.iidea.User;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface IideaBackendService {
+public interface IideaBackendService extends Serializable {
 
     @GET("user/{id}")
-    Call<User> user(@Path("id") int userId);
+    Call<User> user(@Path("id") long userId);
 
     @GET("user/{id}/feed")
-    Call<List<Integer>> feed(@Path("id") int userId);
+    Call<List<Integer>> feed(@Path("id") long userId);
 
     @PUT("user/subscription/{tag}")
     Call<Void> subscribe(@Path("tag") String tag);
@@ -23,15 +24,15 @@ public interface IideaBackendService {
     Call<Void> unsubscribe(@Path("tag") String tag);
 
     @GET("user/{id}/responses")
-    Call<Integer> responsesFrom(@Path("id") int userId);
+    Call<Integer> responsesFrom(@Path("id") long userId);
 
     @GET("project/{id}")
-    Call<Project> project(@Path("id") int projectId);
+    Call<Project> project(@Path("id") long projectId);
 
     @POST("project/{id}")
-    Call<Void> updateProject(@Path("id") int id, @Body ProjectUpdateRequest req);
+    Call<Void> updateProject(@Path("id") long id, @Body ProjectUpdateRequest req);
 
-    default Call<Void> updateProject(int id, @Nullable String name, @Nullable String type,
+    default Call<Void> updateProject(long id, @Nullable String name, @Nullable String type,
                                         @Nullable String description, @Nullable String status) {
         return updateProject(id, new ProjectUpdateRequest(name, type, description, status));
     }
@@ -40,21 +41,21 @@ public interface IideaBackendService {
     Call<List<Long>> searchProjects(@Body ProjectSearchRequest req);
 
     @PUT("project")
-    Call<Integer> createProject(@Body ProjectUpdateRequest req);
+    Call<Long> createProject(@Body ProjectUpdateRequest req);
 
-    default Call<Integer> createProject(@Nullable String name, @Nullable String type,
+    default Call<Long> createProject(@Nullable String name, @Nullable String type,
                                         @Nullable String description, @Nullable String status) {
         return createProject(new ProjectUpdateRequest(name, type, description, status));
     }
 
     @DELETE("project/{id}")
-    Call<Void> deleteProject(@Path("id") int projectId);
+    Call<Void> deleteProject(@Path("id") long projectId);
 
     @GET("project/{id}/responses")
-    Call<List<Integer>> responsesTo(@Path("id") int projectId);
+    Call<List<Integer>> responsesTo(@Path("id") long projectId);
 
     @PUT("project/{id}/responses")
-    Call<Void> respondTo(@Path("id") int projectId);
+    Call<Void> respondTo(@Path("id") long projectId);
 
     @GET("response/{id}")
     Call<BackendResponse> response(@Path("id") int responseId);

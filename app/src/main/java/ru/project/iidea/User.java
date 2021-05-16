@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
-    private int id;
+    private long id;
     private String surname;
     private String name;
     private String patronymic;
@@ -14,9 +14,9 @@ public class User implements Serializable {
     private String description;
     private UserState state;
     private List<ProjectType> subscriptions;
-    private List<Integer> projects;
+    private List<Long> projects;
 
-    User(int id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state, List<ProjectType> subscriptions, List<Integer> projects){
+    User(long id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state, List<ProjectType> subscriptions, List<Long> projects){
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -49,18 +49,18 @@ public class User implements Serializable {
         return false;
     }
 
-    public List<Integer> getProjects() {
+    public List<Long> getProjects() {
         return projects;
     }
 
-    public boolean addProject(int projectID){
+    public boolean addProject(long projectID){
         if(!projects.contains(projectID)){
             return projects.add(projectID);
         }
         return false;
     }
 
-    public boolean removeProject(Integer projectID){
+    public boolean removeProject(long projectID){
         if(projects.contains(projectID)){
             return projects.remove(projectID);
         }
@@ -131,7 +131,7 @@ public class User implements Serializable {
         return state;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 }

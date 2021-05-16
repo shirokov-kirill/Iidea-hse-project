@@ -14,12 +14,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.project.iidea.network.IideaBackend;
+import ru.project.iidea.network.IideaBackendService;
 
 public class ProfileFragmentView extends Fragment {
 
     ProfileFragmentViewInterface activity;
+    IideaBackendService server;
 
     @Override
     public View onCreateView(
@@ -41,36 +49,60 @@ public class ProfileFragmentView extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        User myUser = (User) this.getArguments().get("user");
-        List<Project> projects = (List<Project>) this.getArguments().get("userProjects");
-        TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
-        String fullName = myUser.getSurname() + ' ' + myUser.getName();
-        headLineName.setText(fullName);
-        TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirthHead);
-        dateOfBirth.setText(getString(R.string.Birthday, myUser.getDateOfBirth()));
-        TextView state = view.findViewById(R.id.profileViewUserStatusHead);
-        state.setText(getString(R.string.Status, myUser.getState().toString()));
-        ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
+        long userID = this.getArguments().getLong("userID");
+        server = (IideaBackendService) this.getArguments().getSerializable("server");
+        server.user(userID).enqueue(new Callback<User>() {
             @Override
-            public void onClick(View view) {
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    User user = response.body();
+                    List<Long> projectIDs = user.getProjects();
+                    TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
+                    String fullName = user.getSurname() + ' ' + user.getName();
+                    headLineName.setText(fullName);
+                    TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirthHead);
+                    dateOfBirth.setText(getString(R.string.Birthday, user.getDateOfBirth()));
+                    TextView state = view.findViewById(R.id.profileViewUserStatusHead);
+                    state.setText(getString(R.string.Status, user.getState().toString()));
+                    TextView description = view.findViewById(R.id.profileViewDescription);
+                    description.setText(user.getDescription());
+                    LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
+                    ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
+                    backButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            activity.onBackButtonPressed();
+                        }
+                    });
+                    for(Long projectID : projectIDs){
+                            server.project(projectID).enqueue(new Callback<Project>() {
+                                @Override
+                                public void onResponse(Call<Project> call, Response<Project> response) {
+                                    if(response.isSuccessful() && response.body() != null){
+                                        TextView textView = new TextView(getContext());
+                                        textView.setText(response.body().getName());
+                                        textView.setTextSize(21);
+                                        profileProjects.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Project> call, Throwable t) {
+                                    activity.showToast("Incorrect view of Projects. Please reload page.");
+                                }
+                            });
+                    }
+                } else {
+                    onFailure(call, new IOException("Error uploading user."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
                 activity.onBackButtonPressed();
+                activity.showToast("Some error happened. Please try again.");
             }
         });
-        TextView description = view.findViewById(R.id.profileViewDescription);
-        description.setText(myUser.getDescription());
-        LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
-        if(!projects.isEmpty()){
-            int i = 0;
-            for (Project project : projects) {
-                i++;
-                TextView textView = new TextView(this.getContext());
-                textView.setText(project.getName());
-                textView.setTextSize(21);
-                textView.setId(i);
-                profileProjects.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            }
-        }
         super.onViewCreated(view, savedInstanceState);
     }
 }

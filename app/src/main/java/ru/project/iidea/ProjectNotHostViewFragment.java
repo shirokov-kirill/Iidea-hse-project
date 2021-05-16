@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -49,6 +50,13 @@ public class ProjectNotHostViewFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 activity.onUserIdClicked(project.getHostId());
+            }
+        });
+        Button button = view.findViewById(R.id.button3);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onRespondButtonClicked(project.getId());
             }
         });
         ImageButton imageButton = view.findViewById(R.id.projectNotHostViewHeadLineBackButton);

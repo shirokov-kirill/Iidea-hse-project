@@ -109,11 +109,11 @@ public class MainScreenActivity
         }
         if(myUserProjects == null){
             myUserProjects = new ArrayList<>();
-            final List<Integer> myUserProjectsIDs = myUser.getProjects();
+            final List<Long> myUserProjectsIDs = myUser.getProjects();
             Thread thread = new Thread( new Runnable(){
                 @Override
                 public void run() {
-                    for (Integer myUserProjectID : myUserProjectsIDs){
+                    for (Long myUserProjectID : myUserProjectsIDs){
                         try{
                             myUserProjects.add(server.project(myUserProjectID).execute().body());
                         }catch (IOException e){
@@ -204,6 +204,7 @@ public class MainScreenActivity
         FeedFragment feedFragment = new FeedFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
+        bundle.putSerializable("server", server);
         feedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.FEED);
@@ -279,6 +280,29 @@ public class MainScreenActivity
         onBackPressed();
     }
 
+    @Override
+    public void onRespondButtonClicked(long projectID) {
+        if(!myUser.getProjects().contains(projectID)){
+            server.respondTo(projectID).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        //TODO
+                    } else {
+                        onFailure(call, new IOException("Wrong server answer"));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Error. Please try again");
+                }
+            });
+        } else {
+            showToast("You can't respond your own project.");
+        }
+    }
+
     public void newProjectOnClick(View view) {
         NewProjectFragment newProjectFragment = new NewProjectFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -291,7 +315,7 @@ public class MainScreenActivity
             @Override
             public void run() {
                 try{
-                    Integer id = server.createProject(name, projectType, description, projectState).execute().body();
+                    Long id = server.createProject(name, projectType, description, projectState).execute().body();
                     myUser.addProject(id);
                     myUserProjects.add(new Project(id, ProjectType.valueOf(projectType), name, description, myUser.getId(), ProjectState.valueOf(projectState)));
                 } catch (IOException e){
@@ -323,63 +347,36 @@ public class MainScreenActivity
 
     @Override
     public void onAddSubscriptionClicked(View view, ProjectType type) {
-        //TODO отправить на сервер + изменить стиль кнопки
+        server.subscribe(type.toString()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    //TODO change button style
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                showToast("Something went wrong. Please try again.");
+            }
+        });
     }
 
     public void editProject(View view) {
         ProjectHostEdit projectHostEdit = new ProjectHostEdit();
         Bundle bundle = getSupportFragmentManager().findFragmentByTag("projectHostView").getArguments();
+        bundle.putSerializable("server", server);
         projectHostEdit.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostEdit, "projectHostEdit").addToBackStack(null).commit();
     }
 
     @Override
-    public void onUserIdClicked(final int userID) {
-        final User[] user = {null};
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    user[0] = server.user(userID).execute().body();
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        if(user[0] == null){
-            return;
-        }
-        final List<Project> list = new ArrayList<>();
-        final List<Integer> listId = user[0].getProjects();
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Integer i : listId){
-                    try {
-                        list.add(server.project(i).execute().body());
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        thread1.start();
-        try {
-            thread1.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
+    public void onUserIdClicked(final long userID) {
         ProfileFragmentView profileFragmentView = new ProfileFragmentView();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user[0]);
-        bundle.putSerializable("userProjects", (Serializable) list);
+        bundle.putLong("userID", userID);
+        bundle.putSerializable("server", server);
         profileFragmentView.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentView, "showHostProfile").addToBackStack(null).commit();
     }
