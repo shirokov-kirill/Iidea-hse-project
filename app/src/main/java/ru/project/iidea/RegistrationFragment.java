@@ -20,6 +20,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import ru.project.iidea.network.NetworkConnectionChecker;
+
 public class RegistrationFragment extends Fragment {
 
     private RegistrationFragmentInterface activity;
@@ -60,9 +62,14 @@ public class RegistrationFragment extends Fragment {
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.sign_in_button:
-                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                        startActivityForResult(signInIntent, RC_SIGN_IN);
-                        break;
+                        if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
+                            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                            startActivityForResult(signInIntent, RC_SIGN_IN);
+                            break;
+                        } else {
+                            activity.showToast("Sorry. No internet connection.");
+                            break;
+                        }
                 }
             }
         });
