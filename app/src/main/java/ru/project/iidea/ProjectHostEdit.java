@@ -92,16 +92,16 @@ public class ProjectHostEdit extends Fragment {
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.project_status_new:
-                        projectState.setText(R.string.project_status_new);
+                        projectState.setText(ProjectState.New.toString());
                         return true;
                     case R.id.project_status_search:
-                        projectState.setText(R.string.project_status_search);
+                        projectState.setText(ProjectState.Search.toString());
                         return true;
                     case R.id.project_status_in_progress:
-                        projectState.setText(R.string.project_status_in_progress);
+                        projectState.setText(ProjectState.InProgress.toString());
                         return true;
                     case R.id.project_status_finished:
-                        projectState.setText(R.string.project_status_finished);
+                        projectState.setText(ProjectState.Finished.toString());
                         return true;
                     default:
                         return false;
@@ -121,6 +121,14 @@ public class ProjectHostEdit extends Fragment {
         projectBlock.addView(projectDescription);
 
         scrollView.addView(projectBlock);
+
+        Button button = view.findViewById(R.id.button4);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onSaveProjectPressed(projectName.getText().toString(), projectDescription.getText().toString(), projectState.getText().toString(), projectType.getText().toString(), project.getId());
+            }
+        });
 
         ImageButton imageButton = view.findViewById(R.id.projectHostEditHeadLineBackButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
