@@ -31,6 +31,8 @@ public class MyProjectsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         final List<Project> projects = (List<Project>) bundle.get("userProjects");
         ScrollView projectList = view.findViewById(R.id.myProjects_projects_scroll_view);
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
         for (final Project project : projects){
             final LinearLayout projectBlock = new LinearLayout(this.getContext());
             projectBlock.setOrientation(LinearLayout.VERTICAL);
@@ -61,7 +63,8 @@ public class MyProjectsFragment extends Fragment {
             projectDescription.setText(inputDescription);
             projectBlock.addView(projectName);
             projectBlock.addView(projectDescription);
-            projectList.addView(projectBlock);
+            linearLayout.addView(projectBlock);
         }
+        projectList.addView(linearLayout);
     }
 }
