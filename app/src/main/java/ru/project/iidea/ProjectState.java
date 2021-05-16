@@ -13,7 +13,7 @@ public enum ProjectState {
     public String toString() {
         switch (this) {
             case New:
-                return "IT";
+                return "New";
             case Finished:
                 return "Finished";
             case InProgress:

@@ -3,14 +3,14 @@ package ru.project.iidea;
 import java.io.Serializable;
 
 public class Project implements Serializable {
-    private int id;
+    private long id;
     private ProjectType type;
     private String name;
     private String description;
-    private int hostId;
+    private long hostId;
     private ProjectState status;
 
-    Project(int id, ProjectType type, String name, String description, int hostId, ProjectState status){
+    Project(long id, ProjectType type, String name, String description, long hostId, ProjectState status){
         this.id = id;
         this.type = type;
         this.name = name;
@@ -19,7 +19,7 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -31,7 +31,7 @@ public class Project implements Serializable {
         return name;
     }
 
-    public int getHostId() {
+    public long getHostId() {
         return hostId;
     }
 
