@@ -82,11 +82,6 @@ public class ProjectHostView extends Fragment {
         scrollView.addView(projectBlock);
 
         ImageButton imageButton = view.findViewById(R.id.projectHostViewHeadLineBackButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.onBackButtonPressed();
-            }
-        });
+        imageButton.setOnClickListener(view1 -> activity.onBackButtonPressed());
     }
 }

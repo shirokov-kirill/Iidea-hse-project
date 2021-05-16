@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ru.project.iidea.MainActivity">
+    <item
+        android:id="@+id/project_status_new"
+        android:orderInCategory="100"
+        android:title="@string/project_status_new"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/project_status_finished"
+        android:orderInCategory="100"
+        android:title="@string/project_status_finished"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/project_status_in_progress"
+        android:orderInCategory="100"
+        android:title="@string/project_status_in_progress"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/project_status_search"
+        android:orderInCategory="100"
+        android:title="@string/project_status_search"
+        app:showAsAction="never" />
+</menu>
