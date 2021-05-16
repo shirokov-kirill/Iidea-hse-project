@@ -310,26 +310,29 @@ public class MainScreenActivity
     }
 
     @Override
-    public void onCreateNewProjectClicked(final String projectType, final String name, final String description, final String projectState) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    Long id = server.createProject(name, projectType, description, projectState).execute().body();
-                    myUser.addProject(id);
-                    myUserProjects.add(new Project(id, ProjectType.valueOf(projectType), name, description, myUser.getId(), ProjectState.valueOf(projectState)));
-                } catch (IOException e){
-                    e.printStackTrace();
+    public void onCreateNewProjectClicked(String projectType, String name, String description, String projectState) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.createProject(name, projectType, description, projectState).enqueue(new Callback<Long>() {
+                @Override
+                public void onResponse(Call<Long> call, Response<Long> response) {
+                    if(response.isSuccessful() && response.body() != null){
+                        long id = response.body();
+                        myUser.addProject(id);
+                        myUserProjects.add(new Project(id, ProjectType.valueOf(projectType), name, description, myUser.getId(), ProjectState.valueOf(projectState)));
+                        onBackButtonPressed();
+                    } else {
+                        onFailure(call, new IOException("Error in server connection."));
+                    }
                 }
-            }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
+
+                @Override
+                public void onFailure(Call<Long> call, Throwable t) {
+                    showToast("Error creating project. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
         }
-        onBackPressed();
     }
 
     @Override
@@ -347,19 +350,23 @@ public class MainScreenActivity
 
     @Override
     public void onAddSubscriptionClicked(View view, ProjectType type) {
-        server.subscribe(type.toString()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
-                    //TODO change button style
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.subscribe(type.toString()).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        //TODO change button style
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                showToast("Something went wrong. Please try again.");
-            }
-        });
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
+        }
     }
 
     public void editProject(View view) {
