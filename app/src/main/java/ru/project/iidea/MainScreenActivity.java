@@ -92,7 +92,7 @@ public class MainScreenActivity
             @Override
             public void run() {
                 try{
-                    myUser = server.user(1).execute().body();
+                    myUser = server.user(2).execute().body();
                     System.out.println(myUser);
                 } catch (IOException e){
                     e.printStackTrace();
@@ -201,7 +201,7 @@ public class MainScreenActivity
         }
         ResponsesFragment responsesFragment = new ResponsesFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("responses", new ArrayList<Response>());//TODO обращение к серверу
+        bundle.putSerializable("userProjectIDs", (Serializable) myUser.getProjects());
         responsesFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.RESPONCIES);
@@ -416,6 +416,29 @@ public class MainScreenActivity
     }
 
     @Override
+    public void onRejectResponseButtonClicked(long responseID) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.deleteResponse(responseID).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        onBackPressed();
+                    } else {
+                        onFailure(call, new IOException("Some error."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Some error occurred. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
+        }
+    }
+
+    @Override
     public void onProjectBlockClicked(Project project) {
         ProjectNotHostViewFragment projectNotHostViewFragment = new ProjectNotHostViewFragment();
         Bundle bundle = new Bundle();
@@ -429,27 +452,29 @@ public class MainScreenActivity
         ResponseViewFragment responseViewFragment = new ResponseViewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("response", response);
-        final Project[] projects = new Project[1];
-        Thread thread = new Thread( new Runnable(){
-            @Override
-            public void run() {
-                try{
-                    projects[0] = server.project(response.getProjectId()).execute().body();
-                }catch (IOException e){
-                    e.printStackTrace();
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.project(response.getProjectId()).enqueue(new Callback<Project>() {
+                @Override
+                public void onResponse(Call<Project> call, Response<Project> response) {
+                    if(response.isSuccessful() && response.body() != null){
+                        bundle.putString("projectName", response.body().getName());
+                        responseViewFragment.setArguments(bundle);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responseViewFragment, "responseView").addToBackStack(null).commit();
+                    } else {
+                        onFailure(call, new IOException("Error connecting to database."));
+                    }
                 }
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
+
+                @Override
+                public void onFailure(Call<Project> call, Throwable t) {
+                    showToast("Something went wrong, please try again.");
+                    t.printStackTrace();
+                }
+            });
+        } else {
+            showToast("No Internet connection");
         }
-        bundle.putString("projectName", projects[0].getName());
-        responseViewFragment.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responseViewFragment, "responseView").addToBackStack(null).commit();
     }
 
     @Override
