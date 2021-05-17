@@ -27,7 +27,6 @@ import ru.project.iidea.network.IideaBackendService;
 public class ProfileFragmentView extends Fragment {
 
     ProfileFragmentViewInterface activity;
-    IideaBackendService server;
 
     @Override
     public View onCreateView(
@@ -50,7 +49,7 @@ public class ProfileFragmentView extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         long userID = this.getArguments().getLong("userID");
-        server = (IideaBackendService) this.getArguments().getSerializable("server");
+        IideaBackendService server = IideaBackend.getInstance().getService();
         server.user(userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

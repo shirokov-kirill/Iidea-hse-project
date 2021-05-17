@@ -107,7 +107,6 @@ public class MainScreenActivity
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
-        bundle.putSerializable("server", server);
         profileFragmentEditing.setArguments(bundle);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
@@ -180,7 +179,6 @@ public class MainScreenActivity
         FeedFragment feedFragment = new FeedFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
-        bundle.putSerializable("server", server);
         feedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.FEED);
@@ -217,7 +215,6 @@ public class MainScreenActivity
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", myUser);
-        bundle.putSerializable("server", server);
         profileFragmentEditing.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
@@ -231,7 +228,6 @@ public class MainScreenActivity
         MyProjectsFragment myProjectsFragment = new MyProjectsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("userID", myUser.getId());
-        bundle.putSerializable("server", server);
         myProjectsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
@@ -255,6 +251,29 @@ public class MainScreenActivity
     @Override
     public void onBackButtonPressed() {
         onBackPressed();
+    }
+
+    @Override
+    public void onDeleteProjectPressed(long projectID) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.deleteProject(projectID).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        onBackPressed();
+                    } else {
+                        onFailure(call, new IOException("Something went wrong. Please try again."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet Connection");
+        }
     }
 
     @Override
@@ -370,10 +389,18 @@ public class MainScreenActivity
         }
     }
 
+    @Override
+    public void onProjectBlockInMyProjectsClicked(Project project) {
+        ProjectHostView projectHostView = new ProjectHostView();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("project", project);
+        projectHostView.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostView, "projectHostView").addToBackStack(null).commit();
+    }
+
     public void editProject(View view) {
         ProjectHostEdit projectHostEdit = new ProjectHostEdit();
         Bundle bundle = getSupportFragmentManager().findFragmentByTag("projectHostView").getArguments();
-        bundle.putSerializable("server", server);
         projectHostEdit.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostEdit, "projectHostEdit").addToBackStack(null).commit();
@@ -384,7 +411,6 @@ public class MainScreenActivity
         ProfileFragmentView profileFragmentView = new ProfileFragmentView();
         Bundle bundle = new Bundle();
         bundle.putLong("userID", userID);
-        bundle.putSerializable("server", server);
         profileFragmentView.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentView, "showHostProfile").addToBackStack(null).commit();
     }

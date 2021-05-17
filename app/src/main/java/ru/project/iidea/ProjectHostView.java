@@ -83,5 +83,13 @@ public class ProjectHostView extends Fragment {
 
         ImageButton imageButton = view.findViewById(R.id.projectHostViewHeadLineBackButton);
         imageButton.setOnClickListener(view1 -> activity.onBackButtonPressed());
+
+        Button button = view.findViewById(R.id.projectHostViewDeleteProjectButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onDeleteProjectPressed(project.getId());
+            }
+        });
     }
 }
