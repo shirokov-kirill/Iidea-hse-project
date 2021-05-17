@@ -54,4 +54,18 @@
 
     </ScrollView>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/projectHostViewDeleteProjectButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/Delete"
+            android:textSize="24sp"
+            android:textColor="@color/black"/>
+    </RelativeLayout>
+
 </LinearLayout>

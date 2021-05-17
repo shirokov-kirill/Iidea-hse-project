@@ -24,13 +24,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.project.iidea.network.IideaBackend;
 import ru.project.iidea.network.IideaBackendService;
 import ru.project.iidea.network.NetworkConnectionChecker;
 
 public class ProfileFragmentEditing extends Fragment {
 
     ProfileFragmentEditingInterface activity;
-    IideaBackendService server;
 
     @Override
     public View onCreateView(
@@ -51,7 +51,7 @@ public class ProfileFragmentEditing extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         User myUser = (User) this.getArguments().getSerializable("user");
-        server = (IideaBackendService) this.getArguments().getSerializable("server");
+        IideaBackendService server = IideaBackend.getInstance().getService();
         TextView headLineName = view.findViewById(R.id.profileHeadLineName);
         String fullName = myUser.getSurname() + ' ' + myUser.getName();
         headLineName.setText(fullName);//отсюда

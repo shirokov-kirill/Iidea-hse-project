@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.project.iidea.network.IideaBackend;
 import ru.project.iidea.network.IideaBackendService;
 import ru.project.iidea.network.ProjectSearchRequest;
 
@@ -34,7 +35,6 @@ import static java.lang.Math.min;
 public class FeedFragment extends Fragment {
 
     FeedFragmentInterface activity;
-    IideaBackendService server;
 
     @Nullable
     @Override
@@ -55,7 +55,7 @@ public class FeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
         User myUser = (User) bundle.get("user");
-        server = (IideaBackendService) bundle.getSerializable("server");
+        IideaBackendService server = IideaBackend.getInstance().getService();
         List<ProjectType> subscriptions = myUser.getSubscriptions();
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
         server.searchProjects(new ProjectSearchRequest(null,

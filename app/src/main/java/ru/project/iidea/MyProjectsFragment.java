@@ -21,6 +21,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.project.iidea.network.IideaBackend;
 import ru.project.iidea.network.IideaBackendService;
 import ru.project.iidea.network.NetworkConnectionChecker;
 
@@ -28,7 +29,6 @@ import static java.lang.Math.min;
 
 public class MyProjectsFragment extends Fragment {
 
-    IideaBackendService server;
     MyProjectsFragmentInterface activity;
 
 
@@ -51,7 +51,7 @@ public class MyProjectsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
         long userID =  bundle.getLong("userID");
-        server = (IideaBackendService) bundle.getSerializable("server");
+        IideaBackendService server = IideaBackend.getInstance().getService();
         ScrollView projectList = view.findViewById(R.id.myProjects_projects_scroll_view);
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -72,12 +72,7 @@ public class MyProjectsFragment extends Fragment {
                                         projectBlock.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                ProjectHostView projectHostView = new ProjectHostView();
-                                                Bundle bundle = new Bundle();
-                                                bundle.putSerializable("project", response.body());
-                                                projectHostView.setArguments(bundle);
-                                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                                fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostView, "projectHostView").addToBackStack(null).commit();
+                                                activity.onProjectBlockInMyProjectsClicked(response.body());
                                             }
                                         });
                                         TextView projectName = new TextView(getContext());
