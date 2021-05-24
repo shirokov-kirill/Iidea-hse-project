@@ -28,7 +28,7 @@ public class IideaBackend {
                     Request req = response.request();
                     if(req.header("Authorization") == null) {
                         return req.newBuilder()
-                                .header("Authorization", Credentials.basic("1", ""))
+                                .header("Authorization", Credentials.basic("2", ""))
                                 .build();
                     }
                     return req;

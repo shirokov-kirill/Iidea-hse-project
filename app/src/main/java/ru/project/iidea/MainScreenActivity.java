@@ -20,9 +20,11 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -88,28 +90,6 @@ public class MainScreenActivity
         setContentView(R.layout.activity_mainscreen);
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         server = IideaBackend.getInstance().getService();
-        Thread thread1 = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try{
-                    myUser = server.user(2).execute().body();
-                    System.out.println(myUser);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread1.start();
-        try{
-            thread1.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        profileFragmentEditing.setArguments(bundle);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
         currentTag = FragmentTag.PROFILE;
         ImageButton imageButton = findViewById(R.id.lower_menu_profile_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.profile_button_pressed, null));
@@ -121,6 +101,28 @@ public class MainScreenActivity
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.responces_button_notpressed, null));
         imageButton = findViewById(R.id.lower_menu_myProjects_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.projects_button_notpressed, null));
+        long userID = 1;//changeable
+        server.user(userID).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    myUser = response.body();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userId", myUser.getId());
+                    profileFragmentEditing.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
+                } else {
+                    onFailure(call, new IOException("Critical error."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast("Something is wrong.");
+                onBackPressed();
+            }
+        });
     }
 
     private void updateBottomLine(@NonNull FragmentTag previousTag, @NonNull FragmentTag currentTag) {
@@ -178,7 +180,7 @@ public class MainScreenActivity
         }
         FeedFragment feedFragment = new FeedFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
+        bundle.putSerializable("userID", myUser.getId());
         feedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.FEED);
@@ -214,7 +216,7 @@ public class MainScreenActivity
         }
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
+        bundle.putSerializable("userId", myUser.getId());
         profileFragmentEditing.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
@@ -245,6 +247,29 @@ public class MainScreenActivity
         if(currentTag == FragmentTag.PROFILE){
             AddUserDescriptionFragment addUserDescriptionFragment = new AddUserDescriptionFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, addUserDescriptionFragment, "addUserDescription").addToBackStack(null).commit();
+        }
+    }
+
+    @Override
+    public void unsubscribeOnTag(String tag, LinearLayout linearLayout) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.unsubscribe(tag).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        linearLayout.setVisibility(View.GONE);
+                    } else {
+                        onFailure(call, new IOException("Error thrown from server."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong, please try again.");
+                }
+            });
+        } else {
+            showToast("No internet connection.");
         }
     }
 
@@ -308,7 +333,7 @@ public class MainScreenActivity
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if(response.isSuccessful()){
-                        //TODO
+                        //TODO изменить стиль кнопки
                     } else {
                         onFailure(call, new IOException("Wrong server answer"));
                     }
@@ -375,7 +400,9 @@ public class MainScreenActivity
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if(response.isSuccessful()){
-                        //TODO change button style
+                        view.setClickable(false);
+                    } else {
+                        onFailure(call, new IOException("Server error."));
                     }
                 }
 
