@@ -15,7 +15,7 @@ public interface IideaBackendService extends Serializable {
     Call<User> user(@Path("id") long userId);
 
     @GET("user/{id}/feed")
-    Call<List<Integer>> feed(@Path("id") long userId);
+    Call<List<Long>> feed(@Path("id") long userId);
 
     @PUT("user/subscription/{tag}")
     Call<Void> subscribe(@Path("tag") String tag);
@@ -52,16 +52,16 @@ public interface IideaBackendService extends Serializable {
     Call<Void> deleteProject(@Path("id") long projectId);
 
     @GET("project/{id}/responses")
-    Call<List<Integer>> responsesTo(@Path("id") long projectId);
+    Call<List<Long>> responsesTo(@Path("id") long projectId);
 
     @PUT("project/{id}/responses")
     Call<Void> respondTo(@Path("id") long projectId);
 
     @GET("response/{id}")
-    Call<BackendResponse> response(@Path("id") int responseId);
+    Call<BackendResponse> response(@Path("id") long responseId);
 
     @DELETE("response/{id}")
-    Call<Void> deleteResponse(@Path("id") int responseId);
+    Call<Void> deleteResponse(@Path("id") long responseId);
 
     //TODO Call<Void> modifyUserDescription(userId, String)
 }

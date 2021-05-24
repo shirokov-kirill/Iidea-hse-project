@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.project.iidea.network.IideaBackend;
 import ru.project.iidea.network.IideaBackendService;
 import ru.project.iidea.network.ProjectSearchRequest;
 
@@ -34,7 +35,6 @@ import static java.lang.Math.min;
 public class FeedFragment extends Fragment {
 
     FeedFragmentInterface activity;
-    IideaBackendService server;
 
     @Nullable
     @Override
@@ -54,19 +54,15 @@ public class FeedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
-        User myUser = (User) bundle.get("user");
-        server = (IideaBackendService) bundle.getSerializable("server");
-        List<ProjectType> subscriptions = myUser.getSubscriptions();
+        long myUserID = bundle.getLong("userID");
+        IideaBackendService server = IideaBackend.getInstance().getService();
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
-        server.searchProjects(new ProjectSearchRequest(null,
-                subscriptions.stream().map(ProjectType::toString).collect(Collectors.toList()),
-                null))
+        server.feed(myUserID)
                 .enqueue(new Callback<List<Long>>() {
             @Override
             public void onResponse(Call<List<Long>> call, Response<List<Long>> response) {
                 if(response.isSuccessful() && response.body() != null){
                     List<Long> projectIDs = response.body();
-                    List<Project> projects = new ArrayList<>();
                     final TableLayout tLayout = new TableLayout(getContext());
                     for(Long projectID : projectIDs){
                         server.project(projectID).enqueue(new Callback<Project>() {

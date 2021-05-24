@@ -49,7 +49,7 @@ public class RegistrationFragment extends Fragment {
         // Configure sign-in to request the user's ID, email address, and basic
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestServerAuthCode("621982323742-2oselqnv8k1ce2qvrbcqnjjameejaihc.apps.googleusercontent.com")
+                .requestIdToken("621982323742-2oselqnv8k1ce2qvrbcqnjjameejaihc.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
@@ -88,11 +88,12 @@ public class RegistrationFragment extends Fragment {
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+    private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            System.out.println("Successfully registered!");
-            //TODO, successful registration
+            String idToken = account.getIdToken();
+            // TODO(developer): send ID Token to server and validate
+
         } catch (ApiException e) {
             activity.onBackPressed();
         }

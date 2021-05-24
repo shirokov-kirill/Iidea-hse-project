@@ -5,22 +5,27 @@ import java.io.Serializable;
 import static java.lang.Math.min;
 
 public class Response implements Serializable {
-    long responseId;
-    int projectId;
-    int fromUserId;
+    long id;
+    long to;
+    long from;
 
-    Response(long responseId, int projectId, int fromUserId){
-        this.responseId = responseId;
-        this.projectId = projectId;
-        this.fromUserId = fromUserId;
+    Response(long responseId, long projectId, long fromUserId){
+        this.id = responseId;
+        this.to = projectId;
+        this.from = fromUserId;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public long getProjectId() {
+        return to;
     }
 
-    public int getFromUserId() {
-        return fromUserId;
+    public long getFromUserId() {
+        return from;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "От: " + from + ", на проект: " + to;
+    }
 }

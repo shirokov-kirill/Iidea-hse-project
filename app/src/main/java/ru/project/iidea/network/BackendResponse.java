@@ -3,13 +3,13 @@ package ru.project.iidea.network;
 public class BackendResponse {
 
     private long id;
-    private long fromUser;
-    private long toProject;
+    private long from;
+    private long to;
 
     public BackendResponse(long id, long fromUser, long toProject) {
         this.id = id;
-        this.fromUser = fromUser;
-        this.toProject = toProject;
+        this.from = fromUser;
+        this.to = toProject;
     }
 
     public long getId() {
@@ -17,10 +17,10 @@ public class BackendResponse {
     }
 
     public long getFromUser() {
-        return fromUser;
+        return from;
     }
 
     public long getToProject() {
-        return toProject;
+        return to;
     }
 }

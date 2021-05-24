@@ -8,6 +8,7 @@
     tools:context=".MainScreenActivity">
 
     <LinearLayout
+        android:id="@+id/editProjectUpperBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue">
@@ -29,14 +30,27 @@
             android:text="@string/project"
             android:textColor="@color/white"
             android:textSize="27sp" />
-
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="@id/editProjectUpperBar"
         android:id="@+id/project_host_view_scroll_view">
-
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:text="@string/Save" />
+    </RelativeLayout>
 
 </LinearLayout>

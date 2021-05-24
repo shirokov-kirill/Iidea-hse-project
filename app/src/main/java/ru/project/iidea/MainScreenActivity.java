@@ -20,9 +20,11 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,7 +50,8 @@ public class MainScreenActivity
         ProjectHostViewInterface,
         ProjectHostEditInterface,
         NewProjectFragmentInterface,
-        ResponsesFragmentInterface{
+        ResponsesFragmentInterface,
+        MyProjectsFragmentInterface{
 
     private enum FragmentTag {
         PROFILE,
@@ -79,7 +82,6 @@ public class MainScreenActivity
 
     private FragmentTag currentTag;
     private User myUser;
-    private List<Project> myUserProjects = null;
     private IideaBackendService server;
 
     @Override
@@ -88,53 +90,6 @@ public class MainScreenActivity
         setContentView(R.layout.activity_mainscreen);
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         server = IideaBackend.getInstance().getService();
-        //Integer host_id = getIdByToken(this.getIntent().getExtras().getString("token"));//toServer
-        //User myUser = server.user(host_id);
-        Thread thread1 = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try{
-                    myUser = server.user(1).execute().body();
-                    System.out.println(myUser);
-                } catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread1.start();
-        try{
-            thread1.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        if(myUserProjects == null){
-            myUserProjects = new ArrayList<>();
-            final List<Long> myUserProjectsIDs = myUser.getProjects();
-            Thread thread = new Thread( new Runnable(){
-                @Override
-                public void run() {
-                    for (Long myUserProjectID : myUserProjectsIDs){
-                        try{
-                            myUserProjects.add(server.project(myUserProjectID).execute().body());
-                        }catch (IOException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-            thread.start();
-            try{
-                thread.join();
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
-        profileFragmentEditing.setArguments(bundle);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
         currentTag = FragmentTag.PROFILE;
         ImageButton imageButton = findViewById(R.id.lower_menu_profile_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.profile_button_pressed, null));
@@ -146,6 +101,28 @@ public class MainScreenActivity
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.responces_button_notpressed, null));
         imageButton = findViewById(R.id.lower_menu_myProjects_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.projects_button_notpressed, null));
+        long userID = 1;//changeable
+        server.user(userID).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    myUser = response.body();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userId", myUser.getId());
+                    profileFragmentEditing.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).commit();
+                } else {
+                    onFailure(call, new IOException("Critical error."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast("Something is wrong.");
+                onBackPressed();
+            }
+        });
     }
 
     private void updateBottomLine(@NonNull FragmentTag previousTag, @NonNull FragmentTag currentTag) {
@@ -203,8 +180,7 @@ public class MainScreenActivity
         }
         FeedFragment feedFragment = new FeedFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        bundle.putSerializable("server", server);
+        bundle.putSerializable("userID", myUser.getId());
         feedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, feedFragment, FragmentTag.FEED.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.FEED);
@@ -227,7 +203,7 @@ public class MainScreenActivity
         }
         ResponsesFragment responsesFragment = new ResponsesFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("responses", new ArrayList<Response>());//TODO обращение к серверу
+        bundle.putSerializable("userProjectIDs", (Serializable) myUser.getProjects());
         responsesFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.RESPONCIES);
@@ -240,8 +216,7 @@ public class MainScreenActivity
         }
         ProfileFragmentEditing profileFragmentEditing = new ProfileFragmentEditing();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", myUser);
-        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
+        bundle.putSerializable("userId", myUser.getId());
         profileFragmentEditing.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentEditing, FragmentTag.PROFILE.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROFILE);
@@ -254,7 +229,7 @@ public class MainScreenActivity
         }
         MyProjectsFragment myProjectsFragment = new MyProjectsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("userProjects", (Serializable) myUserProjects);
+        bundle.putSerializable("userID", myUser.getId());
         myProjectsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, myProjectsFragment, FragmentTag.PROJECTS.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.PROJECTS);
@@ -276,8 +251,79 @@ public class MainScreenActivity
     }
 
     @Override
+    public void unsubscribeOnTag(String tag, LinearLayout linearLayout) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.unsubscribe(tag).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        linearLayout.setVisibility(View.GONE);
+                    } else {
+                        onFailure(call, new IOException("Error thrown from server."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong, please try again.");
+                }
+            });
+        } else {
+            showToast("No internet connection.");
+        }
+    }
+
+    @Override
     public void onBackButtonPressed() {
         onBackPressed();
+    }
+
+    @Override
+    public void onDeleteProjectPressed(long projectID) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.deleteProject(projectID).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        onBackPressed();
+                    } else {
+                        onFailure(call, new IOException("Something went wrong. Please try again."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet Connection");
+        }
+    }
+
+    @Override
+    public void onSaveProjectPressed(String name, String description, String state, String type, long id) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.updateProject(id, name, type, description, state).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        onBackButtonPressed();
+                        onBackButtonPressed();
+                        showToast("Successfully modified.");
+                    } else {
+                        onFailure(call, new IOException("some error happened."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Something went wrong. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
+        }
     }
 
     @Override
@@ -287,7 +333,7 @@ public class MainScreenActivity
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if(response.isSuccessful()){
-                        //TODO
+                        //TODO изменить стиль кнопки
                     } else {
                         onFailure(call, new IOException("Wrong server answer"));
                     }
@@ -318,7 +364,6 @@ public class MainScreenActivity
                     if(response.isSuccessful() && response.body() != null){
                         long id = response.body();
                         myUser.addProject(id);
-                        myUserProjects.add(new Project(id, ProjectType.valueOf(projectType), name, description, myUser.getId(), ProjectState.valueOf(projectState)));
                         onBackButtonPressed();
                     } else {
                         onFailure(call, new IOException("Error in server connection."));
@@ -355,7 +400,9 @@ public class MainScreenActivity
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if(response.isSuccessful()){
-                        //TODO change button style
+                        view.setClickable(false);
+                    } else {
+                        onFailure(call, new IOException("Server error."));
                     }
                 }
 
@@ -369,10 +416,18 @@ public class MainScreenActivity
         }
     }
 
+    @Override
+    public void onProjectBlockInMyProjectsClicked(Project project) {
+        ProjectHostView projectHostView = new ProjectHostView();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("project", project);
+        projectHostView.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostView, "projectHostView").addToBackStack(null).commit();
+    }
+
     public void editProject(View view) {
         ProjectHostEdit projectHostEdit = new ProjectHostEdit();
         Bundle bundle = getSupportFragmentManager().findFragmentByTag("projectHostView").getArguments();
-        bundle.putSerializable("server", server);
         projectHostEdit.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, projectHostEdit, "projectHostEdit").addToBackStack(null).commit();
@@ -383,9 +438,31 @@ public class MainScreenActivity
         ProfileFragmentView profileFragmentView = new ProfileFragmentView();
         Bundle bundle = new Bundle();
         bundle.putLong("userID", userID);
-        bundle.putSerializable("server", server);
         profileFragmentView.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentView, "showHostProfile").addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onRejectResponseButtonClicked(long responseID) {
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.deleteResponse(responseID).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        onBackPressed();
+                    } else {
+                        onFailure(call, new IOException("Some error."));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Some error occurred. Please try again.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
+        }
     }
 
     @Override
@@ -402,27 +479,29 @@ public class MainScreenActivity
         ResponseViewFragment responseViewFragment = new ResponseViewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("response", response);
-        final Project[] projects = new Project[1];
-        Thread thread = new Thread( new Runnable(){
-            @Override
-            public void run() {
-                try{
-                    projects[0] = server.project(response.getProjectId()).execute().body();
-                }catch (IOException e){
-                    e.printStackTrace();
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.project(response.getProjectId()).enqueue(new Callback<Project>() {
+                @Override
+                public void onResponse(Call<Project> call, Response<Project> response) {
+                    if(response.isSuccessful() && response.body() != null){
+                        bundle.putString("projectName", response.body().getName());
+                        responseViewFragment.setArguments(bundle);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responseViewFragment, "responseView").addToBackStack(null).commit();
+                    } else {
+                        onFailure(call, new IOException("Error connecting to database."));
+                    }
                 }
-            }
-        });
-        thread.start();
-        try{
-            thread.join();
-        } catch (InterruptedException e){
-            e.printStackTrace();
+
+                @Override
+                public void onFailure(Call<Project> call, Throwable t) {
+                    showToast("Something went wrong, please try again.");
+                    t.printStackTrace();
+                }
+            });
+        } else {
+            showToast("No Internet connection");
         }
-        bundle.putString("projectName", projects[0].getName());
-        responseViewFragment.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responseViewFragment, "responseView").addToBackStack(null).commit();
     }
 
     @Override
