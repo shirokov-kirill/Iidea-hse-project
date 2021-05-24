@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import ru.project.iidea.network.NetworkConnectionChecker;
+
 public class MainActivity extends BaseActivity implements RegistrationFragmentInterface{
 
     String currentTag;
@@ -32,8 +34,12 @@ public class MainActivity extends BaseActivity implements RegistrationFragmentIn
     }
 
     public void onClick(View view) {
-        Intent intent = new Intent(this, MainScreenActivity.class);
-        intent.putExtra("token", token);
-        startActivity(intent);
+        if (NetworkConnectionChecker.isNetworkAvailable(this)) {
+            Intent intent = new Intent(this, MainScreenActivity.class);
+            intent.putExtra("token", token);
+            startActivity(intent);
+        } else {
+            showToast("No internet connection.");
+        }
     }
 }

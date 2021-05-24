@@ -54,10 +54,10 @@ public class FeedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
-        User myUser = (User) bundle.get("user");
+        long myUserID = bundle.getLong("userID");
         IideaBackendService server = IideaBackend.getInstance().getService();
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
-        server.feed(myUser.getId())
+        server.feed(myUserID)
                 .enqueue(new Callback<List<Long>>() {
             @Override
             public void onResponse(Call<List<Long>> call, Response<List<Long>> response) {
