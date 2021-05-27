@@ -20,6 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.project.iidea.network.IideaBackend;
+import ru.project.iidea.network.IideaBackendService;
+import ru.project.iidea.network.NetworkConnectionChecker;
+
 public class SearchFragment extends Fragment {
 
     SearchFragmentInterface activity;
@@ -47,7 +54,33 @@ public class SearchFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.onSearchButtonClicked(getTagsStartingWithText(userText.getText().toString()));
+                if (userText.getText().toString().equals("")){
+                    activity.onSearchButtonClicked(new ArrayList<>());
+                }
+                Bundle bundle = getArguments();
+                long userID = bundle.getLong("userID");
+                IideaBackendService server = IideaBackend.getInstance().getService();
+                if (NetworkConnectionChecker.isNetworkAvailable(getContext())) {
+                    server.user(userID).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
+                            List<ProjectType> res = new ArrayList<>();
+                            List<ProjectType> userProjectTypes = response.body().getSubscriptions();
+                            for (ProjectType projectType : projectTypes) {
+                                if (projectType.toString().startsWith(userText.getText().toString()) && !userProjectTypes.contains(projectType)) {
+                                    res.add(projectType);
+                                }
+                            }
+                            activity.onSearchButtonClicked(res);
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
+                }
             }
         });
         userText.addTextChangedListener(new TextWatcher() {
@@ -64,53 +97,55 @@ public class SearchFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String str = editable.toString();
-                List<String> projectTypeNames = getTagNamesStartingWithText(str);
-                LinearLayout searchRecs = view.findViewById(R.id.layoutForSearchRecs);
-                searchRecs.removeAllViews();
-                for (String projectTypeName : projectTypeNames){
-                    final TextView recomendation = new TextView(getContext());
-                    recomendation.setClickable(true);
-                    recomendation.setText(projectTypeName);
-                    recomendation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    recomendation.setTextSize(24);
-                    final EditText askLine = view.findViewById(R.id.searchExpressionEditView);
-                    recomendation.setOnClickListener(new View.OnClickListener() {
+                if (str.isEmpty()) {
+                    LinearLayout searchRecs = view.findViewById(R.id.layoutForSearchRecs);
+                    searchRecs.removeAllViews();
+                    return;
+                }
+                List<String> projectTypeNames = new ArrayList<>();
+                Bundle bundle = getArguments();
+                long userID = bundle.getLong("userID");
+                IideaBackendService server = IideaBackend.getInstance().getService();
+                if (NetworkConnectionChecker.isNetworkAvailable(getContext())) {
+                    server.user(userID).enqueue(new Callback<User>() {
                         @Override
-                        public void onClick(View view) {
-                            askLine.setText(recomendation.getText());
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
+                                List<ProjectType> userProjectTypes = response.body().getSubscriptions();
+                                for (ProjectType projectType : projectTypes) {
+                                    String projectTypeUpperCase = projectType.toString().toUpperCase();
+                                    String strUpperCase = str.toUpperCase();
+                                    if (projectTypeUpperCase.startsWith(strUpperCase) && !userProjectTypes.contains(projectType)) {
+                                        projectTypeNames.add(projectType.toString());
+                                    }
+                                }
+                                LinearLayout searchRecs = view.findViewById(R.id.layoutForSearchRecs);
+                                searchRecs.removeAllViews();
+                                for (String projectTypeName : projectTypeNames){
+                                    final TextView recomendation = new TextView(getContext());
+                                    recomendation.setClickable(true);
+                                    recomendation.setText(projectTypeName);
+                                    recomendation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                    recomendation.setTextSize(24);
+                                    final EditText askLine = view.findViewById(R.id.searchExpressionEditView);
+                                    recomendation.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            askLine.setText(recomendation.getText());
+                                        }
+                                    });
+                                    searchRecs.addView(recomendation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
                         }
                     });
-                    searchRecs.addView(recomendation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 }
             }
         });
-    }
-
-    private List<String> getTagNamesStartingWithText(final String string){
-        if(string.equals("")){
-            return new ArrayList<>();
-        }
-        List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
-        List<String> res = new ArrayList<>();
-        for (ProjectType projectType : projectTypes){
-            if(projectType.toString().startsWith(string)){
-                res.add(projectType.toString());
-            }
-        }
-        return res;
-    }
-
-    private List<ProjectType> getTagsStartingWithText(final String string){
-        if(string.equals("")){
-            return new ArrayList<>();
-        }
-        List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
-        List<ProjectType> res = new ArrayList<>();
-        for (ProjectType projectType : projectTypes){
-            if(projectType.toString().startsWith(string)){
-                res.add(projectType);
-            }
-        }
-        return res;
     }
 }

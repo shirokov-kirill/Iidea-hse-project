@@ -59,7 +59,7 @@ public class MyProjectsFragment extends Fragment {
             server.user(userID).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.isSuccessful() && response.body() != null){
+                    if(response.isSuccessful() && response.body() != null) {
                         List<Long> projectIDs = response.body().getProjects();
                         for(long projectID : projectIDs){
                             server.project(projectID).enqueue(new Callback<Project>() {
@@ -96,7 +96,7 @@ public class MyProjectsFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<Project> call, Throwable t) {
-
+                                    activity.showToast("Something is wrong, please try again.");
                                 }
                             });
                         }
