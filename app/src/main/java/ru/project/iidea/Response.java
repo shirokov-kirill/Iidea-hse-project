@@ -1,8 +1,8 @@
 package ru.project.iidea;
 
 import androidx.annotation.NonNull;
+
 import java.io.Serializable;
-import static java.lang.Math.min;
 
 public class Response implements Serializable {
     long id;

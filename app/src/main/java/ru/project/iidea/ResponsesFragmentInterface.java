@@ -1,6 +1,6 @@
 package ru.project.iidea;
 
 public interface ResponsesFragmentInterface {
-    public void openCurrentResponse(Response response);
-    public void showToast(String message);
+    void openCurrentResponse(Response response);
+    void showToast(String message);
 }

@@ -40,8 +40,8 @@
             android:background="@null"/>
 
         <ImageButton
-            android:id="@+id/lower_menu_responces_button"
-            android:onClick="responcesButtonOnClick"
+            android:id="@+id/lower_menu_responses_button"
+            android:onClick="responsesButtonOnClick"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

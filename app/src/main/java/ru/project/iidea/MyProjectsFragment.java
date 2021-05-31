@@ -1,7 +1,6 @@
 package ru.project.iidea;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,21 +48,23 @@ public class MyProjectsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
-        long userID =  bundle.getLong("userID");
+        long userID = 0;
+        if (bundle != null) {
+            userID = bundle.getLong("userID");
+        }
         IideaBackendService server = IideaBackend.getInstance().getService();
         ScrollView projectList = view.findViewById(R.id.myProjects_projects_scroll_view);
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
             server.user(userID).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.isSuccessful() && response.body() != null) {
+                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                    if (response.isSuccessful() && response.body() != null){
                         List<Long> projectIDs = response.body().getProjects();
                         for(long projectID : projectIDs){
                             server.project(projectID).enqueue(new Callback<Project>() {
                                 @Override
-                                public void onResponse(Call<Project> call, Response<Project> response) {
+                                public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
                                     if(response.isSuccessful() && response.body() != null){
                                         final LinearLayout projectBlock = new LinearLayout(getContext());
                                         projectBlock.setOrientation(LinearLayout.VERTICAL);
@@ -76,7 +76,9 @@ public class MyProjectsFragment extends Fragment {
                                             }
                                         });
                                         TextView projectName = new TextView(getContext());
-                                        projectName.setText(response.body().getName());
+                                        if (response.body() != null) {
+                                            projectName.setText(response.body().getName());
+                                        }
                                         projectName.setTextSize(24);
                                         TextView projectDescription = new TextView(getContext());
                                         projectDescription.setTextSize(21);
@@ -95,8 +97,8 @@ public class MyProjectsFragment extends Fragment {
                                 }
 
                                 @Override
-                                public void onFailure(Call<Project> call, Throwable t) {
-                                    activity.showToast("Something is wrong, please try again.");
+                                public void onFailure(@NonNull Call<Project> call, @NonNull Throwable t) {
+
                                 }
                             });
                         }
@@ -107,7 +109,7 @@ public class MyProjectsFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                     activity.showToast("Something is wrong, please try again.");
                 }
             });

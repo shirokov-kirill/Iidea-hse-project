@@ -1,8 +1,6 @@
 package ru.project.iidea;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -10,14 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -45,20 +41,23 @@ public class ProfileFragmentEditing extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof  ProfileFragmentEditingInterface){
+        if (context instanceof  ProfileFragmentEditingInterface){
             activity = (ProfileFragmentEditingInterface) context;
         }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        long myUserID = this.getArguments().getLong("userId");
+        long myUserID = 0;
+        if (this.getArguments() != null) {
+            myUserID = this.getArguments().getLong("userId");
+        }
         IideaBackendService server = IideaBackend.getInstance().getService();
         TextView headLineName = view.findViewById(R.id.profileHeadLineName);
         if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
             server.user(myUserID).enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                     if(response.isSuccessful() && response.body() != null){
                         User myUser = response.body();
                         String fullName = myUser.getSurname() + ' ' + myUser.getName();
@@ -133,7 +132,7 @@ public class ProfileFragmentEditing extends Fragment {
                             if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
                                 server.project(projectID).enqueue(new Callback<Project>() {
                                     @Override
-                                    public void onResponse(Call<Project> call, Response<Project> response) {
+                                    public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
                                         if(response.isSuccessful() && response.body() != null){
                                             TextView textView = new TextView(getContext());
                                             textView.setText(response.body().getName());
@@ -143,7 +142,7 @@ public class ProfileFragmentEditing extends Fragment {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<Project> call, Throwable t) {
+                                    public void onFailure(@NonNull Call<Project> call, @NonNull Throwable t) {
 
                                     }
                                 });
@@ -157,7 +156,7 @@ public class ProfileFragmentEditing extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                     activity.showToast("Something went wrong.");
                     activity.onBackPressed();
                 }

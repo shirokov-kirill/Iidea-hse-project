@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -54,13 +53,13 @@ public class ResponsesFragment extends Fragment {
                 for (long projectID : projectIDs) {
                     server.responsesTo(projectID).enqueue(new Callback<List<Long>>() {
                         @Override
-                        public void onResponse(Call<List<Long>> call, Response<List<Long>> response) {
+                        public void onResponse(@NonNull Call<List<Long>> call, @NonNull Response<List<Long>> response) {
                             if(response.isSuccessful() && response.body() != null){
                                 List<Long> responseIDs = response.body();
                                 for (long responseID : responseIDs){
                                     server.response(responseID).enqueue(new Callback<BackendResponse>() {
                                         @Override
-                                        public void onResponse(Call<BackendResponse> call, Response<BackendResponse> response) {
+                                        public void onResponse(@NonNull Call<BackendResponse> call, @NonNull Response<BackendResponse> response) {
                                             if(response.isSuccessful() && response.body() != null){
                                                 BackendResponse backendResponse = response.body();
                                                 TextView textView = new TextView(getContext());
@@ -79,7 +78,7 @@ public class ResponsesFragment extends Fragment {
                                         }
 
                                         @Override
-                                        public void onFailure(Call<BackendResponse> call, Throwable t) {
+                                        public void onFailure(@NonNull Call<BackendResponse> call, @NonNull Throwable t) {
                                             t.printStackTrace();
                                         }
                                     });
@@ -90,7 +89,7 @@ public class ResponsesFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call<List<Long>> call, Throwable t) {
+                        public void onFailure(@NonNull Call<List<Long>> call, @NonNull Throwable t) {
 
                         }
                     });

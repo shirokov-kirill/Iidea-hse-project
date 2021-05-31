@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -60,16 +58,13 @@ public class RegistrationFragment extends Fragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.sign_in_button:
-                        if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
-                            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                            startActivityForResult(signInIntent, RC_SIGN_IN);
-                            break;
-                        } else {
-                            activity.showToast("Sorry. No internet connection.");
-                            break;
-                        }
+                if (view.getId() == R.id.sign_in_button) {
+                    if (NetworkConnectionChecker.isNetworkAvailable(getContext())) {
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                    } else {
+                        activity.showToast("Sorry. No internet connection.");
+                    }
                 }
             }
         });

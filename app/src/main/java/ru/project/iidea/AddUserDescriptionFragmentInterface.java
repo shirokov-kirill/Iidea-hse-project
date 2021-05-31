@@ -1,5 +1,5 @@
 package ru.project.iidea;
 
 public interface AddUserDescriptionFragmentInterface {
-    public void onSaveButtonInAddUserDescriptionClicked(String newDescription);
+    void onSaveButtonInAddUserDescriptionClicked(String newDescription);
 }
