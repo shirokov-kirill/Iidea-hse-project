@@ -75,7 +75,7 @@ public class SearchResultsFragment extends Fragment {
         if(string.equals("")){
             return new ArrayList<>();
         }
-        List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
+        ProjectType[] projectTypes = ProjectType.values();
         List<String> res = new ArrayList<>();
         for (ProjectType projectType : projectTypes){
             if(projectType.toString().startsWith(string)){
@@ -89,7 +89,7 @@ public class SearchResultsFragment extends Fragment {
         if(string.equals("")){
             return new ArrayList<>();
         }
-        List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
+        ProjectType[] projectTypes = ProjectType.values();
         List<ProjectType> res = new ArrayList<>();
         for (ProjectType projectType : projectTypes){
             if(projectType.toString().startsWith(string)){

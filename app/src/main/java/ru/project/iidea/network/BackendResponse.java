@@ -2,9 +2,9 @@ package ru.project.iidea.network;
 
 public class BackendResponse {
 
-    private long id;
-    private long from;
-    private long to;
+    private final long id;
+    private final long from;
+    private final long to;
 
     public BackendResponse(long id, long fromUser, long toProject) {
         this.id = id;

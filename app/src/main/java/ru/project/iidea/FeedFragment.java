@@ -16,14 +16,12 @@ import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.project.iidea.network.IideaBackend;
 import ru.project.iidea.network.IideaBackendService;
-import ru.project.iidea.network.ProjectSearchRequest;
 
 import static java.lang.Math.min;
 
@@ -55,14 +53,14 @@ public class FeedFragment extends Fragment {
         server.feed(myUserID)
                 .enqueue(new Callback<List<Long>>() {
             @Override
-            public void onResponse(Call<List<Long>> call, Response<List<Long>> response) {
+            public void onResponse(@NonNull Call<List<Long>> call, @NonNull Response<List<Long>> response) {
                 if(response.isSuccessful() && response.body() != null){
                     List<Long> projectIDs = response.body();
                     final TableLayout tLayout = new TableLayout(getContext());
                     for(Long projectID : projectIDs){
                         server.project(projectID).enqueue(new Callback<Project>() {
                             @Override
-                            public void onResponse(Call<Project> call, Response<Project> response) {
+                            public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
                                 if(response.isSuccessful() && response.body() != null){
                                     Project project = response.body();
                                     final TableLayout projectBlock = new TableLayout(getContext());
@@ -117,7 +115,7 @@ public class FeedFragment extends Fragment {
                             }
 
                             @Override
-                            public void onFailure(Call<Project> call, Throwable t) {
+                            public void onFailure(@NonNull Call<Project> call, @NonNull Throwable t) {
                                 t.printStackTrace();
                             }
                         });
@@ -129,7 +127,7 @@ public class FeedFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Long>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Long>> call, @NonNull Throwable t) {
                 activity.showToast("Something went wrong while download. Please check your internet connection.");
             }
         });

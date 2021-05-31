@@ -4,9 +4,9 @@ import java.util.List;
 
 public class ProjectSearchRequest {
 
-    private String query;
-    private List<String> tags;
-    private List<String> excludedTags;
+    private final String query;
+    private final List<String> tags;
+    private final List<String> excludedTags;
 
     public ProjectSearchRequest(String query, List<String> tags, List<String> excludedTags) {
         this.query = query;

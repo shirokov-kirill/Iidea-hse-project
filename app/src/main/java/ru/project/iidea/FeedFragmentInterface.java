@@ -1,6 +1,6 @@
 package ru.project.iidea;
 
 public interface FeedFragmentInterface {
-    public void onProjectBlockClicked(Project project);
-    public void showToast(String message);
+    void onProjectBlockClicked(Project project);
+    void showToast(String message);
 }

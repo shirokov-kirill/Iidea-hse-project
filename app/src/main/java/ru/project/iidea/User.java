@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
-    private long id;
+    private final long id;
     private String surname;
     private String name;
     private String patronymic;
@@ -13,8 +13,8 @@ public class User implements Serializable {
     private String phoneNumber;
     private String description;
     private UserState state;
-    private List<ProjectType> subscriptions;
-    private List<Long> projects;
+    private final List<ProjectType> subscriptions;
+    private final List<Long> projects;
 
     User(long id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state, List<ProjectType> subscriptions, List<Long> projects){
         this.id = id;
