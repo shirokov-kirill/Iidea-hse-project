@@ -192,6 +192,9 @@ public class MainScreenActivity
             return;
         }
         SearchFragment searchFragment = new SearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userID", myUser.getId());
+        searchFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, searchFragment, FragmentTag.SEARCH.toString()).addToBackStack(null).commit();
         updateBottomLine(currentTag, FragmentTag.SEARCH);
         currentTag = FragmentTag.SEARCH;
@@ -395,12 +398,13 @@ public class MainScreenActivity
 
     @Override
     public void onAddSubscriptionClicked(View view, ProjectType type) {
-        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+        if (NetworkConnectionChecker.isNetworkAvailable(this)) {
             server.subscribe(type.toString()).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()){
                         view.setClickable(false);
+                        showToast("Вы успешно подписались на " + type.toString());
                     } else {
                         onFailure(call, new IOException("Server error."));
                     }
