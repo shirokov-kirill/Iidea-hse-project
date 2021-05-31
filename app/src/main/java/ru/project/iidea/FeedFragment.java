@@ -1,10 +1,12 @@
 package ru.project.iidea;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -48,20 +50,23 @@ public class FeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
         long myUserID = bundle.getLong("userID");
+        float scale = getResources().getDisplayMetrics().density;
         IideaBackendService server = IideaBackend.getInstance().getService();
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
         server.feed(myUserID)
                 .enqueue(new Callback<List<Long>>() {
             @Override
             public void onResponse(@NonNull Call<List<Long>> call, @NonNull Response<List<Long>> response) {
-                if(response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     List<Long> projectIDs = response.body();
                     final TableLayout tLayout = new TableLayout(getContext());
-                    for(Long projectID : projectIDs){
+                    tLayout.setPadding((int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f),
+                            (int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f));
+                    for (Long projectID : projectIDs){
                         server.project(projectID).enqueue(new Callback<Project>() {
                             @Override
                             public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
-                                if(response.isSuccessful() && response.body() != null){
+                                if (response.isSuccessful() && response.body() != null){
                                     Project project = response.body();
                                     final TableLayout projectBlock = new TableLayout(getContext());
                                     projectBlock.setStretchAllColumns(true);
@@ -88,7 +93,7 @@ public class FeedFragment extends Fragment {
                                     projectDescription.setText(inputDescription);
 
                                     TableRow row1 = new TableRow(getContext());
-                                    row1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    row1.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT));
                                     row1.addView(projectName);
 
 
@@ -103,14 +108,23 @@ public class FeedFragment extends Fragment {
                                     row1.addView(projectType);
                                     row1.addView(projectStatus);
 
-                                    TableRow row2 = new TableRow(getContext());
-                                    row2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    LinearLayout row2 = new LinearLayout(getContext());
+                                    row2.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                                     row2.addView(projectDescription);
 
 
                                     projectBlock.addView(row1);
                                     projectBlock.addView(row2);
+                                    projectBlock.setPadding((int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f),
+                                            (int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f));
                                     tLayout.addView(projectBlock);
+                                    View separator = new View(getContext());
+                                    separator.setBackgroundColor(Color.parseColor("#808080"));
+                                    LinearLayout.LayoutParams separatorLayoutParams = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.MATCH_PARENT, (int) (scale + 0.5f));
+                                    separatorLayoutParams.setMargins(0, (int) (10 * scale + 0.5f), 0, (int) (10 * scale + 0.5f));
+                                    separator.setLayoutParams(separatorLayoutParams);
+                                    tLayout.addView(separator);
                                 }
                             }
 

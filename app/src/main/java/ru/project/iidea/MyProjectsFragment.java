@@ -1,7 +1,9 @@
 package ru.project.iidea;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +51,7 @@ public class MyProjectsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
         long userID = 0;
+        float scale = getResources().getDisplayMetrics().density;
         if (bundle != null) {
             userID = bundle.getLong("userID");
         }
@@ -56,16 +59,18 @@ public class MyProjectsFragment extends Fragment {
         ScrollView projectList = view.findViewById(R.id.myProjects_projects_scroll_view);
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
+        linearLayout.setPadding((int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f),
+                (int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f));
+        if (NetworkConnectionChecker.isNetworkAvailable(getContext())){
             server.user(userID).enqueue(new Callback<User>() {
                 public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                    if (response.isSuccessful() && response.body() != null){
+                    if (response.isSuccessful() && response.body() != null) {
                         List<Long> projectIDs = response.body().getProjects();
-                        for(long projectID : projectIDs){
+                        for (long projectID : projectIDs) {
                             server.project(projectID).enqueue(new Callback<Project>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
-                                    if(response.isSuccessful() && response.body() != null){
+                                    if (response.isSuccessful() && response.body() != null) {
                                         final LinearLayout projectBlock = new LinearLayout(getContext());
                                         projectBlock.setOrientation(LinearLayout.VERTICAL);
                                         projectBlock.setClickable(true);
@@ -84,7 +89,7 @@ public class MyProjectsFragment extends Fragment {
                                         projectDescription.setTextSize(21);
                                         String description = response.body().getDescription();
                                         String inputDescription;
-                                        if(description.length() != 0){
+                                        if (description.length() != 0) {
                                             inputDescription = description.substring(0, min(description.length(), 40)) + "...";
                                         } else {
                                             inputDescription = "";
@@ -93,6 +98,13 @@ public class MyProjectsFragment extends Fragment {
                                         projectBlock.addView(projectName);
                                         projectBlock.addView(projectDescription);
                                         linearLayout.addView(projectBlock);
+                                        View separator = new View(getContext());
+                                        separator.setBackgroundColor(Color.parseColor("#808080"));
+                                        LinearLayout.LayoutParams separatorLayoutParams = new LinearLayout.LayoutParams(
+                                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (scale + 0.5f));
+                                        separatorLayoutParams.setMargins(0, (int) (10 * scale + 0.5f), 0, (int) (10 * scale + 0.5f));
+                                        separator.setLayoutParams(separatorLayoutParams);
+                                        linearLayout.addView(separator);
                                     }
                                 }
 
