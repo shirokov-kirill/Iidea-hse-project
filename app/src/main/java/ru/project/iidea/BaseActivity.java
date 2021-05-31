@@ -13,7 +13,7 @@ public class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 
     public void showProgress(){
-        if(mProgressDialog == null){
+        if (mProgressDialog == null){
             mProgressDialog = new ProgressDialog(this, R.style.customDialog);
             mProgressDialog.setCancelable(false);
             mProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -23,7 +23,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void hideProgress(){
-        if(mProgressDialog != null && mProgressDialog.isShowing()){
+        if (mProgressDialog != null && mProgressDialog.isShowing()){
             mProgressDialog.hide();
         }
     }

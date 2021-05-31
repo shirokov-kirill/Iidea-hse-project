@@ -91,8 +91,8 @@ public class MainScreenActivity
         long userID = 1;//changeable
         server.user(userID).enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful() && response.body() != null){
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                if (response.isSuccessful() && response.body() != null){
                     myUser = response.body();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("userId", myUser.getId());
@@ -105,7 +105,7 @@ public class MainScreenActivity
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 showToast("Something is wrong.");
                 onBackPressed();
             }
@@ -245,7 +245,7 @@ public class MainScreenActivity
         if(NetworkConnectionChecker.isNetworkAvailable(this)){
             server.unsubscribe(tag).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
                         linearLayout.setVisibility(View.GONE);
                     } else {
@@ -254,7 +254,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     showToast("Something went wrong, please try again.");
                 }
             });
@@ -273,7 +273,7 @@ public class MainScreenActivity
         if(NetworkConnectionChecker.isNetworkAvailable(this)){
             server.deleteProject(projectID).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
                         onBackPressed();
                     } else {
@@ -282,7 +282,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     showToast("Something went wrong. Please try again.");
                 }
             });
@@ -296,7 +296,7 @@ public class MainScreenActivity
         if(NetworkConnectionChecker.isNetworkAvailable(this)){
             server.updateProject(id, name, type, description, state).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
                         onBackButtonPressed();
                         onBackButtonPressed();
@@ -307,7 +307,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     showToast("Something went wrong. Please try again.");
                 }
             });
@@ -321,7 +321,7 @@ public class MainScreenActivity
         if(!myUser.getProjects().contains(projectID)){
             server.respondTo(projectID).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
                         //TODO изменить стиль кнопки
                     } else {
@@ -330,7 +330,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     showToast("Error. Please try again");
                 }
             });
@@ -350,7 +350,7 @@ public class MainScreenActivity
         if(NetworkConnectionChecker.isNetworkAvailable(this)){
             server.createProject(name, projectType, description, projectState).enqueue(new Callback<Long>() {
                 @Override
-                public void onResponse(Call<Long> call, Response<Long> response) {
+                public void onResponse(@NonNull Call<Long> call, @NonNull Response<Long> response) {
                     if(response.isSuccessful() && response.body() != null){
                         long id = response.body();
                         myUser.addProject(id);
@@ -361,7 +361,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Long> call, Throwable t) {
+                public void onFailure(@NonNull Call<Long> call, @NonNull Throwable t) {
                     showToast("Error creating project. Please try again.");
                 }
             });
@@ -388,7 +388,7 @@ public class MainScreenActivity
         if (NetworkConnectionChecker.isNetworkAvailable(this)) {
             server.subscribe(type.toString()).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if (response.isSuccessful()){
                         view.setClickable(false);
                         showToast("Вы успешно подписались на " + type.toString());
@@ -398,7 +398,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     showToast("Something went wrong. Please try again.");
                 }
             });
@@ -438,7 +438,7 @@ public class MainScreenActivity
         if(NetworkConnectionChecker.isNetworkAvailable(this)){
             server.deleteResponse(responseID).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
                         onBackPressed();
                     } else {
@@ -447,7 +447,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                     showToast("Some error occurred. Please try again.");
                 }
             });
@@ -470,10 +470,10 @@ public class MainScreenActivity
         ResponseViewFragment responseViewFragment = new ResponseViewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("response", response);
-        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+        if (NetworkConnectionChecker.isNetworkAvailable(this)){
             server.project(response.getProjectId()).enqueue(new Callback<Project>() {
                 @Override
-                public void onResponse(Call<Project> call, Response<Project> response) {
+                public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
                     if(response.isSuccessful() && response.body() != null){
                         bundle.putString("projectName", response.body().getName());
                         responseViewFragment.setArguments(bundle);
@@ -485,7 +485,7 @@ public class MainScreenActivity
                 }
 
                 @Override
-                public void onFailure(Call<Project> call, Throwable t) {
+                public void onFailure(@NonNull Call<Project> call, Throwable t) {
                     showToast("Something went wrong, please try again.");
                     t.printStackTrace();
                 }

@@ -2,10 +2,10 @@ package ru.project.iidea.network;
 
 class ProjectUpdateRequest {
 
-    private String name;
-    private String type;
-    private String description;
-    private String status;
+    private final String name;
+    private final String type;
+    private final String description;
+    private final String status;
 
     public ProjectUpdateRequest(String name, String type, String description, String status) {
         this.name = name;

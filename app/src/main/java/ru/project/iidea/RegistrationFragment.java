@@ -23,7 +23,7 @@ import ru.project.iidea.network.NetworkConnectionChecker;
 public class RegistrationFragment extends Fragment {
 
     private RegistrationFragmentInterface activity;
-    private static int RC_SIGN_IN = 123;
+    private static final int RC_SIGN_IN = 123;
 
     @Override
     public View onCreateView(

@@ -3,11 +3,11 @@ package ru.project.iidea;
 import java.io.Serializable;
 
 public class Project implements Serializable {
-    private long id;
+    private final long id;
     private ProjectType type;
     private String name;
     private String description;
-    private long hostId;
+    private final long hostId;
     private ProjectState status;
 
     Project(long id, ProjectType type, String name, String description, long hostId, ProjectState status){

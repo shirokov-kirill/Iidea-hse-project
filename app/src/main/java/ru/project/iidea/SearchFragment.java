@@ -63,8 +63,8 @@ public class SearchFragment extends Fragment {
                 if (NetworkConnectionChecker.isNetworkAvailable(getContext())) {
                     server.user(userID).enqueue(new Callback<User>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
+                        public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                            ProjectType[] projectTypes = ProjectType.values();
                             List<ProjectType> res = new ArrayList<>();
                             List<ProjectType> userProjectTypes = response.body().getSubscriptions();
                             for (ProjectType projectType : projectTypes) {
@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
 
                         }
                     });
@@ -109,9 +109,9 @@ public class SearchFragment extends Fragment {
                 if (NetworkConnectionChecker.isNetworkAvailable(getContext())) {
                     server.user(userID).enqueue(new Callback<User>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
+                        public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                             if (response.isSuccessful() && response.body() != null) {
-                                List<ProjectType> projectTypes = Arrays.asList(ProjectType.values());
+                                ProjectType[] projectTypes = ProjectType.values();
                                 List<ProjectType> userProjectTypes = response.body().getSubscriptions();
                                 for (ProjectType projectType : projectTypes) {
                                     String projectTypeUpperCase = projectType.toString().toUpperCase();
@@ -140,7 +140,7 @@ public class SearchFragment extends Fragment {
                             }
                         }
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
 
                         }
                     });
