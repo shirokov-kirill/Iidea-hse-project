@@ -1,16 +1,8 @@
 package ru.project.iidea;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,17 +10,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.View;
 
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import ru.project.iidea.network.*;
@@ -56,7 +43,7 @@ public class MainScreenActivity
     private enum FragmentTag {
         PROFILE,
         FEED,
-        RESPONCIES,
+        RESPONSES,
         PROJECTS,
         SEARCH;
 
@@ -73,8 +60,8 @@ public class MainScreenActivity
                     return "feed";
                 case PROJECTS:
                     return "projects";
-                case RESPONCIES:
-                    return "responcies";
+                case RESPONSES:
+                    return "responses";
             }
             return "";
         }
@@ -97,7 +84,7 @@ public class MainScreenActivity
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.feed_button_notpressed, null));
         imageButton = findViewById(R.id.lower_menu_search_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.search_button_notpressed, null));
-        imageButton = findViewById(R.id.lower_menu_responces_button);
+        imageButton = findViewById(R.id.lower_menu_responses_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.responces_button_notpressed, null));
         imageButton = findViewById(R.id.lower_menu_myProjects_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.projects_button_notpressed, null));
@@ -139,8 +126,8 @@ public class MainScreenActivity
                 imageButton = findViewById(R.id.lower_menu_feed_button);
                 imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.feed_button_notpressed, null));
                 break;
-            case RESPONCIES:
-                imageButton = findViewById(R.id.lower_menu_responces_button);
+            case RESPONSES:
+                imageButton = findViewById(R.id.lower_menu_responses_button);
                 imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.responces_button_notpressed, null));
                 break;
             case PROJECTS:
@@ -160,8 +147,8 @@ public class MainScreenActivity
                 imageButton = findViewById(R.id.lower_menu_feed_button);
                 imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.feed_button_pressed, null));
                 return;
-            case RESPONCIES:
-                imageButton = findViewById(R.id.lower_menu_responces_button);
+            case RESPONSES:
+                imageButton = findViewById(R.id.lower_menu_responses_button);
                 imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.responces_button_pressed, null));
                 return;
             case PROJECTS:
@@ -200,17 +187,17 @@ public class MainScreenActivity
         currentTag = FragmentTag.SEARCH;
     }
 
-    public void responcesButtonOnClick(View view) {
-        if (currentTag == FragmentTag.RESPONCIES) {
+    public void responsesButtonOnClick(View view) {
+        if (currentTag == FragmentTag.RESPONSES) {
             return;
         }
         ResponsesFragment responsesFragment = new ResponsesFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("userProjectIDs", (Serializable) myUser.getProjects());
         responsesFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONCIES.toString()).addToBackStack(null).commit();
-        updateBottomLine(currentTag, FragmentTag.RESPONCIES);
-        currentTag = FragmentTag.RESPONCIES;
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, responsesFragment, FragmentTag.RESPONSES.toString()).addToBackStack(null).commit();
+        updateBottomLine(currentTag, FragmentTag.RESPONSES);
+        currentTag = FragmentTag.RESPONSES;
     }
 
     public void profileButtonOnClick(View view) {
@@ -542,10 +529,10 @@ public class MainScreenActivity
                 return FragmentTag.FEED;
             case "projects":
                 return FragmentTag.PROJECTS;
-            case "responcies":
-                return FragmentTag.RESPONCIES;
+            case "responses":
+                return FragmentTag.RESPONSES;
             case "responseView":
-                return FragmentTag.RESPONCIES;
+                return FragmentTag.RESPONSES;
             case "projectHostEdit":
                 return FragmentTag.PROJECTS;
             case "projectHostView":

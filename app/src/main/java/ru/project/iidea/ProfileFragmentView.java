@@ -1,6 +1,5 @@
 package ru.project.iidea;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,7 +50,7 @@ public class ProfileFragmentView extends Fragment {
         IideaBackendService server = IideaBackend.getInstance().getService();
         server.user(userID).enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if(response.isSuccessful() && response.body() != null){
                     User user = response.body();
                     List<Long> projectIDs = user.getProjects();
@@ -76,7 +74,7 @@ public class ProfileFragmentView extends Fragment {
                     for(Long projectID : projectIDs){
                             server.project(projectID).enqueue(new Callback<Project>() {
                                 @Override
-                                public void onResponse(Call<Project> call, Response<Project> response) {
+                                public void onResponse(@NonNull Call<Project> call, @NonNull Response<Project> response) {
                                     if(response.isSuccessful() && response.body() != null){
                                         TextView textView = new TextView(getContext());
                                         textView.setText(response.body().getName());
@@ -86,7 +84,7 @@ public class ProfileFragmentView extends Fragment {
                                 }
 
                                 @Override
-                                public void onFailure(Call<Project> call, Throwable t) {
+                                public void onFailure(@NonNull Call<Project> call, @NonNull Throwable t) {
                                     activity.showToast("Incorrect view of Projects. Please reload page.");
                                 }
                             });
@@ -97,7 +95,7 @@ public class ProfileFragmentView extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 activity.onBackButtonPressed();
                 activity.showToast("Some error happened. Please try again.");
             }

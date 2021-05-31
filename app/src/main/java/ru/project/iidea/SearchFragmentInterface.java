@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface SearchFragmentInterface {
 
-    public void onSearchButtonClicked(List<ProjectType> types);
-    public void onAddSubscriptionClicked(View view, ProjectType type);
-    public void onBackButtonPressed();
+    void onSearchButtonClicked(List<ProjectType> types);
+    void onAddSubscriptionClicked(View view, ProjectType type);
+    void onBackButtonPressed();
 }
