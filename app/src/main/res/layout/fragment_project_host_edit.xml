@@ -36,13 +36,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="@id/editProjectUpperBar"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:id="@+id/project_host_view_scroll_view">
     </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp">
 
         <Button
             android:id="@+id/button4"
@@ -50,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
+            android:layout_marginBottom="5dp"
             android:text="@string/Save" />
     </RelativeLayout>
 

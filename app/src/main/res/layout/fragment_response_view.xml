@@ -60,14 +60,16 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ProjectFrom"
+                    android:text ="@string/ProjectFrom"
+                    android:textColor="@color/black"
                     android:textSize="27sp"/>
 
                 <TextView
                     android:id="@+id/responseViewProjectName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/Edit"
+                    android:text=""
+                    android:textColor="@color/black"
                     android:textSize="24sp"/>
             </LinearLayout>
 
@@ -79,13 +81,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/FromUser"
+                    android:textColor="@color/black"
                     android:textSize="27sp"/>
 
                 <TextView
                     android:id="@+id/responseViewToUserPage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/Edit"
+                    android:textColor="@color/black"
+                    android:text=""
                     android:textSize="24sp"/>
             </LinearLayout>
         </LinearLayout>
@@ -93,12 +97,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <Button
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginVertical="5dp"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/red_button"
             android:text="@string/RejectResponse"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             android:id="@+id/rejectResponseButton"/>
     </RelativeLayout>
 </LinearLayout>
