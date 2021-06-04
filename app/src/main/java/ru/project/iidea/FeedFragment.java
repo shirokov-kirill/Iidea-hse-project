@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -53,8 +54,7 @@ public class FeedFragment extends Fragment {
         float scale = getResources().getDisplayMetrics().density;
         IideaBackendService server = IideaBackend.getInstance().getService();
         ScrollView projectList = view.findViewById(R.id.feed_scroll_view);
-        server.feed(myUserID)
-                .enqueue(new Callback<List<Long>>() {
+        server.feed(myUserID).enqueue(new Callback<List<Long>>() {
             @Override
             public void onResponse(@NonNull Call<List<Long>> call, @NonNull Response<List<Long>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -78,10 +78,12 @@ public class FeedFragment extends Fragment {
                                         }
                                     });
                                     TextView projectName = new TextView(getContext());
+                                    projectName.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                     projectName.setText(project.getName());
                                     projectName.setTextSize(24);
 
                                     TextView projectDescription = new TextView(getContext());
+                                    projectDescription.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                     projectDescription.setTextSize(21);
                                     String description = project.getDescription();
                                     String inputDescription;
@@ -98,10 +100,12 @@ public class FeedFragment extends Fragment {
 
 
                                     TextView projectType = new TextView(getContext());
+                                    projectType.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                     projectType.setText(project.getType().toString());
                                     projectType.setTextSize(21);
 
                                     TextView projectStatus = new TextView(getContext());
+                                    projectStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                     projectStatus.setText(project.getStatus().toString());
                                     projectStatus.setTextSize(21);
 
