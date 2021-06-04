@@ -45,8 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp">
+        android:layout_margin = "8dp">
 
         <Button
             android:id="@+id/button4"
@@ -54,7 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="5dp"
+            android:textColor="@color/blue"
+            android:background="@drawable/blue_button"
             android:text="@string/Save" />
     </RelativeLayout>
 
