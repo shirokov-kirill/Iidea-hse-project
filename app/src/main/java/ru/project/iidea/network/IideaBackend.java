@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class IideaBackend {
 
@@ -35,6 +36,7 @@ public class IideaBackend {
                 }).build();
         retrofit = new Retrofit.Builder()
                 .client(client)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("https://uadaf.tech/iidea/").build();
         service = retrofit.create(IideaBackendService.class);

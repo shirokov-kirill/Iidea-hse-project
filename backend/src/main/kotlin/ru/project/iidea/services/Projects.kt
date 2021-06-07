@@ -14,15 +14,15 @@ fun Route.projects() = route("project") {
     put {
         process { (params, caller) ->
             transaction {
-                val res = Projects.insert {
-                    it[name] = requireNotNull(params["name"]).str
-                    it[type] = requireNotNull(params["type"]).str
-                    it[description] = requireNotNull(params["description"]).str
-                    it[status] = requireNotNull(params["status"]).str
-                    it[host] = caller
-                }.resultedValues
-                require(res != null && res.isNotEmpty())
-                res.first()[Projects.id]
+                verifyInsert {
+                    Projects.insert {
+                        it[name] = requireNotNull(params["name"]).str
+                        it[type] = requireNotNull(params["type"]).str
+                        it[description] = requireNotNull(params["description"]).str
+                        it[status] = requireNotNull(params["status"]).str
+                        it[host] = caller
+                    }
+                }.first()[Projects.id]
             }
         }
     }
@@ -48,14 +48,14 @@ fun Route.projects() = route("project") {
     route("{id}") {
         get {
             process { (params, _) ->
-                val id = requireNotNull(params["id"]).int
+                val id = requireNotNull(params["id"]).long
                 Project.fromDatabase(id)
             }
         }
 
         post {
             process(respond = null) { (params, caller) ->
-                val id = requireNotNull(params["id"]).int
+                val id = requireNotNull(params["id"]).long
                 val project = Project.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
                 if (project.hostId != caller) {
                     return@process HttpStatusCode.Forbidden
@@ -73,7 +73,7 @@ fun Route.projects() = route("project") {
 
         delete {
             process(respond = null) { (params, caller) ->
-                val id = requireNotNull(params["id"]).int
+                val id = requireNotNull(params["id"]).long
                 val project = Project.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
                 if (project.hostId != caller) {
                     return@process HttpStatusCode.Forbidden
@@ -87,7 +87,7 @@ fun Route.projects() = route("project") {
         route("responses") {
             get {
                 process { (params, _) ->
-                    val id = requireNotNull(params["id"]).int
+                    val id = requireNotNull(params["id"]).long
                     transaction {
                         Responses
                             .slice(Responses.id)
@@ -100,15 +100,15 @@ fun Route.projects() = route("project") {
 
             put {
                 process { (params, caller) ->
-                    val id = requireNotNull(params["id"]).int
-                    val res = transaction {
-                        Responses.insert {
-                            it[from] = caller
-                            it[to] = id
-                        }.resultedValues
+                    val id = requireNotNull(params["id"]).long
+                    transaction {
+                        verifyInsert {
+                            Responses.insert {
+                                it[from] = caller
+                                it[to] = id
+                            }
+                        }.first()[Responses.id]
                     }
-                    require(res != null && res.isNotEmpty())
-                    res.first()[Responses.id]
                 }
             }
         }

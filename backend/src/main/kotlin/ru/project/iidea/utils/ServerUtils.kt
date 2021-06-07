@@ -7,17 +7,21 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.util.pipeline.*
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.statements.InsertStatement
 import ru.project.iidea.UserPrincipal
 
 typealias Ctx = PipelineContext<Unit, ApplicationCall>
 
-data class RequestCtx(val params: JsonObject, val sender: Int)
+data class RequestCtx(val params: JsonObject, val sender: Long)
 
 private fun Parameters.toJson(): JsonObject = json {
     forEach { s, list ->
         s to list.first()
     }
 }
+
+object NoAutoResponse;
 
 suspend fun <T> Ctx.process(
     notFoundForEmpty: Boolean = true,
@@ -34,6 +38,9 @@ suspend fun <T> Ctx.process(
         }
         val caller = requireNotNull(call.principal<UserPrincipal>()).id
         val result = func(RequestCtx(params, caller))
+        if(result == NoAutoResponse) {
+            return
+        }
         if (respond != null) {
             if (notFoundForEmpty && result is List<*> && result.isEmpty()) {
                 return call.respond(HttpStatusCode.NotFound)
@@ -55,3 +62,9 @@ suspend fun <T> Ctx.process(
     }
 }
 
+
+fun <T : Any> verifyInsert(block: () -> InsertStatement<T>): List<ResultRow> {
+    val res = block().resultedValues
+    require(res != null && res.isNotEmpty())
+    return res
+}

@@ -28,6 +28,9 @@ inline val JsonElement.bln: Boolean
 inline val JsonElement.int: Int
     get() = wrap { asInt }
 
+inline val JsonElement.long: Long
+    get() = wrap { asLong }
+
 inline val JsonElement.obj: JsonObject
     get() = wrap { asJsonObject }
 

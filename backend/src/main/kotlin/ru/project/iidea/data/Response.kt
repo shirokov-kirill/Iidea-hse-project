@@ -8,9 +8,9 @@ import ru.project.iidea.dao.Projects
 import ru.project.iidea.dao.Responses
 
 data class Response(
-    val id: Int,
-    val from: Int,
-    val to: Int
+    val id: Long,
+    val from: Long,
+    val to: Long
 ) {
 
     constructor(db: ResultRow) : this(
@@ -22,7 +22,7 @@ data class Response(
 
     companion object {
 
-        fun fromDatabase(id: Int): Response? = transaction {
+        fun fromDatabase(id: Long): Response? = transaction {
             val res = Responses.select { Responses.id.eq(id) }.firstOrNull() ?: return@transaction null
             Response(res)
         }
