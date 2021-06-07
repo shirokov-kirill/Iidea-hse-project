@@ -101,6 +101,7 @@ public class RegistrationFragment extends Fragment {
                     if(response.isSuccessful() && response.body() != null){
                         IideaBackend server = IideaBackend.getInstance();
                         server.setUserID(response.body());
+                        activity.onRegistrationClick(response.body());
                     } else {
                         onFailure(call, new IOException("Error registration"));
                     }
