@@ -12,10 +12,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.Level
-import ru.project.iidea.dao.Projects
-import ru.project.iidea.dao.Responses
-import ru.project.iidea.dao.Subscriptions
-import ru.project.iidea.dao.Users
+import ru.project.iidea.dao.*
 import ru.project.iidea.services.projects
 import ru.project.iidea.services.responses
 import ru.project.iidea.services.users
@@ -32,7 +29,7 @@ data class UserPrincipal(val id: Long) : Principal
 fun main() {
     Database.connect(connectUrl, "com.mysql.cj.jdbc.Driver", config["user"].str, config["password"].str)
 //    transaction {
-//        SchemaUtils.create(Users, Projects, Subscriptions, Responses)
+//        SchemaUtils.create(Users, Projects, Subscriptions, Responses, Registrations)
 //    }
     embeddedServer(Netty, 8000) {
         install(ContentNegotiation) {

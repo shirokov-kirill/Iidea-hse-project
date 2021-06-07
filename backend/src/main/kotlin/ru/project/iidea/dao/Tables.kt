@@ -4,11 +4,10 @@ import org.jetbrains.exposed.sql.Table
 
 object Registrations : Table("registrations") {
 
-    val googleId = text("id")
+    val googleId = text("googleId")
     val userId = long("id") references Users.id
 
-    override val primaryKey = PrimaryKey(googleId)
-
+    override val primaryKey = PrimaryKey(userId)
 }
 
 object Users : Table("users") {
