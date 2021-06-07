@@ -27,7 +27,7 @@ import java.io.File
 val config = JsonParser.parseString(File("config.json").readText()).obj
 private val connectUrl = "jdbc:mysql://${config["host"].str}:3306/${config["database"].str}?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=UTC"
 
-data class UserPrincipal(val id: Int) : Principal
+data class UserPrincipal(val id: Long) : Principal
 
 fun main() {
     Database.connect(connectUrl, "com.mysql.cj.jdbc.Driver", config["user"].str, config["password"].str)
@@ -43,7 +43,7 @@ fun main() {
         install(Authentication) {
             basic {
                 validate { cred ->
-                    cred.name.toIntOrNull()?.let(::UserPrincipal)
+                    cred.name.toLongOrNull()?.let(::UserPrincipal)
                 }
             }
         }

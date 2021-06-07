@@ -23,6 +23,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("mysql:mysql-connector-java:8.0.21")
+    implementation("com.google.apis:google-api-services-oauth2:v2-rev20200213-1.31.0")
 }
 
 java {

@@ -11,6 +11,10 @@ import java.util.List;
 
 public interface IideaBackendService extends Serializable {
 
+    @POST("user/auth")
+    @Headers("Content-Type: text/plain")
+    Call<Long> auth(@Body String token);
+
     @GET("user/{id}")
     Call<User> user(@Path("id") long userId);
 

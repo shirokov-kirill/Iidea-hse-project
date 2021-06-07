@@ -6,10 +6,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.project.iidea.dao.Projects
 
 data class Project(
-    val id: Int,
+    val id: Long,
     val type: String,
     val name: String,
-    val hostId: Int,
+    val hostId: Long,
     val description: String,
     val status: String
 ) {
@@ -24,7 +24,7 @@ data class Project(
 
     companion object {
 
-        fun fromDatabase(id: Int): Project? = transaction {
+        fun fromDatabase(id: Long): Project? = transaction {
             val res = Projects.select { Projects.id.eq(id) }.firstOrNull() ?: return@transaction null
             Project(res)
         }
