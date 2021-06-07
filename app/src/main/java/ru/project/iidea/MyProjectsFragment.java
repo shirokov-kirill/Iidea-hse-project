@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -85,8 +86,10 @@ public class MyProjectsFragment extends Fragment {
                                             projectName.setText(response.body().getName());
                                         }
                                         projectName.setTextSize(24);
+                                        projectName.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                         TextView projectDescription = new TextView(getContext());
                                         projectDescription.setTextSize(21);
+                                        projectDescription.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                         String description = response.body().getDescription();
                                         String inputDescription;
                                         if (description.length() != 0) {

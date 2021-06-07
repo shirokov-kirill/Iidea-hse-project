@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -57,12 +58,16 @@ public class ProfileFragmentView extends Fragment {
                     TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
                     String fullName = user.getSurname() + ' ' + user.getName();
                     headLineName.setText(fullName);
+                    headLineName.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirthHead);
                     dateOfBirth.setText(getString(R.string.Birthday, user.getDateOfBirth()));
+                    dateOfBirth.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     TextView state = view.findViewById(R.id.profileViewUserStatusHead);
                     state.setText(getString(R.string.Status, user.getState().toString()));
+                    state.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     TextView description = view.findViewById(R.id.profileViewDescription);
                     description.setText(user.getDescription());
+                    description.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
                     ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
                     backButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +84,7 @@ public class ProfileFragmentView extends Fragment {
                                         TextView textView = new TextView(getContext());
                                         textView.setText(response.body().getName());
                                         textView.setTextSize(21);
+                                        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                         profileProjects.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                     }
                                 }

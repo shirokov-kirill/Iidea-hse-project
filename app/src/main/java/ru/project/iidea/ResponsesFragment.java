@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -66,6 +67,7 @@ public class ResponsesFragment extends Fragment {
                                                 ru.project.iidea.Response response1 = new ru.project.iidea.Response(backendResponse.getId(), backendResponse.getToProject(), backendResponse.getFromUser());
                                                 textView.setText(response1.toString());
                                                 textView.setTextSize(21);
+                                                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                                 textView.setClickable(true);
                                                 textView.setOnClickListener(new View.OnClickListener() {
                                                     @Override
@@ -99,6 +101,7 @@ public class ResponsesFragment extends Fragment {
             }
         } else {
             TextView textView = new TextView(this.getContext());
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
             textView.setText(R.string.NoResponses);
             textView.setTextSize(30);
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
@@ -126,6 +127,7 @@ public class SearchFragment extends Fragment {
                                     final TextView recomendation = new TextView(getContext());
                                     recomendation.setClickable(true);
                                     recomendation.setText(projectTypeName);
+                                    recomendation.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                     recomendation.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                                     recomendation.setTextSize(24);
                                     final EditText askLine = view.findViewById(R.id.searchExpressionEditView);
