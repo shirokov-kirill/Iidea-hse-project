@@ -2,6 +2,8 @@ package ru.project.iidea;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +60,13 @@ public class ProfileFragmentView extends Fragment {
                     TextView headLineName = view.findViewById(R.id.profileViewHeadLineName);
                     String fullName = user.getSurname() + ' ' + user.getName();
                     headLineName.setText(fullName);
-                    headLineName.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    headLineName.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirthHead);
                     dateOfBirth.setText(getString(R.string.Birthday, user.getDateOfBirth()));
                     dateOfBirth.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    TextView messaging = view.findViewById(R.id.writeMessageTextButton);
+                    messaging.setText(Html.fromHtml("<a href=\"mailto:" + user.getEmail() + "\">Отправить e-mail</a>", 0));
+                    messaging.setMovementMethod(LinkMovementMethod.getInstance());
                     TextView state = view.findViewById(R.id.profileViewUserStatusHead);
                     state.setText(getString(R.string.Status, user.getState().toString()));
                     state.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
