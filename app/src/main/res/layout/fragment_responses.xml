@@ -37,7 +37,7 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileHeadLine"
-        android:layout_marginTop="10dp">
+        android:layout_margin ="8dp">
 
         <LinearLayout
             android:id="@+id/responsesOnMyProjects"

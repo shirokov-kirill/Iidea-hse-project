@@ -1,6 +1,7 @@
 package ru.project.iidea;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,19 @@ public class ProjectHostView extends Fragment {
         TextView projectDescription = new TextView(this.getContext());
         TextView projectType = new TextView(this.getContext());
         TextView projectState = new TextView(this.getContext());
+        float scale = getResources().getDisplayMetrics().density;
+        View separator1 = new View(getContext());
+        separator1.setBackgroundColor(Color.parseColor("#808080"));
+        LinearLayout.LayoutParams separatorLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, (int) (scale + 0.5f));
+        separatorLayoutParams.setMargins(0, (int) (10 * scale + 0.5f), 0, (int) (10 * scale + 0.5f));
+        separator1.setLayoutParams(separatorLayoutParams);
+        View separator2 = new View(getContext());
+        separator2.setBackgroundColor(Color.parseColor("#808080"));
+        separator2.setLayoutParams(separatorLayoutParams);
+        View separator3 = new View(getContext());
+        separator3.setBackgroundColor(Color.parseColor("#808080"));
+        separator3.setLayoutParams(separatorLayoutParams);
 
         descriptionLabel.setText(R.string.Description);
         descriptionLabel.setTextSize(21);
@@ -73,8 +87,11 @@ public class ProjectHostView extends Fragment {
         projectState.setText(getString(R.string.projectState, project.getStatus().toString()));
 
         projectBlock.addView(projectName);
+        projectBlock.addView(separator1);
         projectBlock.addView(projectState);
+        projectBlock.addView(separator2);
         projectBlock.addView(projectType);
+        projectBlock.addView(separator3);
         projectBlock.addView(linearLayout);
 
         scrollView.addView(projectBlock);

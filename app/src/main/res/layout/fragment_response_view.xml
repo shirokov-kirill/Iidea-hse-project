@@ -42,32 +42,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileHeadLine"
-        android:layout_marginTop="10dp">
+        app:layout_constraintTop_toBottomOf="@+id/profileHeadLine">
 
         <LinearLayout
             android:id="@+id/responsesOnMyProjects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ProjectFrom"
+                    android:text ="@string/ProjectFrom"
+                    android:textColor="@color/black"
                     android:textSize="27sp"/>
 
                 <TextView
                     android:id="@+id/responseViewProjectName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/Edit"
+                    android:text=""
+                    android:textColor="@color/black"
                     android:textSize="24sp"/>
             </LinearLayout>
 
@@ -79,13 +79,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/FromUser"
+                    android:textColor="@color/black"
                     android:textSize="27sp"/>
 
                 <TextView
                     android:id="@+id/responseViewToUserPage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/Edit"
+                    android:textColor="@color/black"
+                    android:text=""
                     android:textSize="24sp"/>
             </LinearLayout>
         </LinearLayout>
@@ -93,12 +95,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp">
+
         <Button
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/red_button"
             android:text="@string/RejectResponse"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             android:id="@+id/rejectResponseButton"/>
     </RelativeLayout>
 </LinearLayout>

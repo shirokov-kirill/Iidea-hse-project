@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:text="@string/next"
+        android:textColor="@color/black"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"/>
 

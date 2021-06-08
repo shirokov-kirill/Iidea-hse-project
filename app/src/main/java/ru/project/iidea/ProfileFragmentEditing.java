@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -96,8 +97,10 @@ public class ProfileFragmentEditing extends Fragment {
                         });
                         TextView email = view.findViewById(R.id.profileEmail);
                         email.setText(getString(R.string.Email, myUser.getEmail()));
+                        email.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                         TextView phoneNumber = view.findViewById(R.id.profilePhoneNumber);
                         phoneNumber.setText(getString(R.string.PhoneNumber, myUser.getPhoneNumber()));
+                        phoneNumber.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                         Button downloadCharactButton = view.findViewById(R.id.profileUploadResumeButton);
                         downloadCharactButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -112,6 +115,7 @@ public class ProfileFragmentEditing extends Fragment {
                                 LinearLayout linearLayout = new LinearLayout(getContext());
                                 TextView textView = new TextView(getContext());
                                 textView.setText(projectType.toString());
+                                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                 textView.setTextSize(21);
                                 linearLayout.addView(textView);
                                 Button button = new Button(getContext());
@@ -136,6 +140,7 @@ public class ProfileFragmentEditing extends Fragment {
                                         if(response.isSuccessful() && response.body() != null){
                                             TextView textView = new TextView(getContext());
                                             textView.setText(response.body().getName());
+                                            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                             textView.setTextSize(21);
                                             profileProjects.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                         }

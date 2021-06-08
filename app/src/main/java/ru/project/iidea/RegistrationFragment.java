@@ -19,10 +19,13 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.project.iidea.network.IideaBackend;
+import ru.project.iidea.network.IideaBackendService;
 import ru.project.iidea.network.NetworkConnectionChecker;
 
 public class RegistrationFragment extends Fragment {
@@ -93,17 +96,23 @@ public class RegistrationFragment extends Fragment {
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
             String authCode = account.getServerAuthCode();
-            IideaBackend.getInstance().getService().auth(authCode).enqueue(new Callback<Long>() {
+            IideaBackendService server = IideaBackend.getInstance().getService();
+            server.auth(authCode).enqueue(new Callback<Long>() {
                 @Override
                 public void onResponse(Call<Long> call, Response<Long> response) {
-                    //TODO: Handle auth
+                    if(response.isSuccessful() && response.body() != null){
+                        IideaBackend server = IideaBackend.getInstance();
+                        server.setUserID(response.body());
+                        activity.onRegistrationClick(response.body());
+                    } else {
+                        onFailure(call, new IOException("Error registration"));
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<Long> call, Throwable t) {
-                    //TODO: Handle auth failure
+                    activity.showToast("Error registering to server.");
                 }
             });
 

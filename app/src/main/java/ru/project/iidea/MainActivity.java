@@ -11,7 +11,6 @@ import ru.project.iidea.network.NetworkConnectionChecker;
 public class MainActivity extends BaseActivity implements RegistrationFragmentInterface{
 
     String currentTag;
-    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +25,17 @@ public class MainActivity extends BaseActivity implements RegistrationFragmentIn
     public void onClick(View view) {
         if (NetworkConnectionChecker.isNetworkAvailable(this)) {
             Intent intent = new Intent(this, MainScreenActivity.class);
-            intent.putExtra("token", token);
+            intent.putExtra("userID", 1L);
             startActivity(intent);
         } else {
             showToast("No internet connection.");
         }
+    }
+
+    @Override
+    public void onRegistrationClick(long id){
+        Intent intent = new Intent(this, MainScreenActivity.class);
+        intent.putExtra("userID", id);
+        startActivity(intent);
     }
 }
