@@ -89,6 +89,13 @@
                 android:textSize="21sp"/>
 
             <TextView
+                android:id="@+id/writeMessageTextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textSize="18sp"/>
+
+            <TextView
                 android:id="@+id/profileViewMyProjectsText"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"

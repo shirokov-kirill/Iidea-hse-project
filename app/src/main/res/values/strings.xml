@@ -69,4 +69,5 @@
     <string name="project_status_search">Search</string>
     <string name="Delete">Удалить</string>
     <string name="Unsubscribe">Отписаться</string>
+    <string name="WriteMessage">Написать сообщение</string>
 </resources>
