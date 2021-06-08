@@ -88,7 +88,7 @@ public class MainScreenActivity
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.responces_button_notpressed, null));
         imageButton = findViewById(R.id.lower_menu_myProjects_button);
         imageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.projects_button_notpressed, null));
-        long userID = 1;//changeable
+        long userID = getIntent().getExtras().getLong("userID");
         server.user(userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {

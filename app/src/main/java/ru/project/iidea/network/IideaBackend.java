@@ -13,6 +13,7 @@ public class IideaBackend {
     private final IideaBackendService service;
     private final Retrofit retrofit;
     private final OkHttpClient client;
+    private Long userID;
 
     private static IideaBackend instance;
 
@@ -24,12 +25,13 @@ public class IideaBackend {
     }
 
     private IideaBackend() {
+        userID = 0L;
         client = new OkHttpClient.Builder()
                 .authenticator((route, response) -> {
                     Request req = response.request();
                     if(req.header("Authorization") == null) {
                         return req.newBuilder()
-                                .header("Authorization", Credentials.basic("1", ""))
+                                .header("Authorization", Credentials.basic(userID.toString(), ""))
                                 .build();
                     }
                     return req;
@@ -44,5 +46,9 @@ public class IideaBackend {
 
     public IideaBackendService getService() {
         return service;
+    }
+
+    public void setUserID(long userID) {
+        this.userID = userID;
     }
 }
