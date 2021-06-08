@@ -14,6 +14,7 @@ public class IideaBackend {
     private final Retrofit retrofit;
     private final OkHttpClient client;
     private Long userID;
+    private String userToken;
 
     private static IideaBackend instance;
 
@@ -26,12 +27,13 @@ public class IideaBackend {
 
     private IideaBackend() {
         userID = -1L;
+        userToken = "";
         client = new OkHttpClient.Builder()
                 .authenticator((route, response) -> {
                     Request req = response.request();
                     if(req.header("Authorization") == null) {
                         return req.newBuilder()
-                                .header("Authorization", Credentials.basic(userID.toString(), ""))
+                                .header("Authorization", Credentials.basic(userID.toString(), userToken))
                                 .build();
                     }
                     return req;
@@ -50,5 +52,9 @@ public class IideaBackend {
 
     public void setUserID(long userID) {
         this.userID = userID;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }
