@@ -15,6 +15,10 @@ object Users : Table("users") {
 
     val id = long("id").autoIncrement()
     val status = varchar("status", 255)
+    val name = text("name")
+    val surname = text("surname")
+    val email = text("email")
+    val description = text("description")
 
     override val primaryKey = PrimaryKey(id)
 }

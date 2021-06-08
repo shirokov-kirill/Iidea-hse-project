@@ -2,5 +2,7 @@
   "host": "localhost",
   "database": "hse_project",
   "user": "user",
-  "password": "pass"
+  "password": "pass",
+  "google_client_id": "",
+  "google_client_secret": ""
 }

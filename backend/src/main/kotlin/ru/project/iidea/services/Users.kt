@@ -1,8 +1,9 @@
 package ru.project.iidea.services
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.apache.v2.ApacheHttpTransport
-import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.client.json.gson.GsonFactory
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -10,11 +11,13 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.project.iidea.config
 import ru.project.iidea.dao.*
 import ru.project.iidea.data.User
 import ru.project.iidea.utils.*
@@ -23,9 +26,12 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-val verifier = GoogleIdTokenVerifier.Builder(ApacheHttpTransport(), JacksonFactory())
+val googleClientId = config["google_client_id"].str
+val googleClientSecret = config["google_client_secret"].str
+
+val verifier = GoogleIdTokenVerifier.Builder(ApacheHttpTransport(), GsonFactory.getDefaultInstance())
     .apply {
-        audience = listOf("621982323742-2oselqnv8k1ce2qvrbcqnjjameejaihc.apps.googleusercontent.com")
+        audience = listOf(googleClientId)
     }.build()
 
 
@@ -34,39 +40,34 @@ fun Route.users() = route("user") {
     post("auth") {
         process { (_, _) ->
             val token = call.receive<String>()
-            suspendCoroutine<Long?> { cont ->
-                launch(Dispatchers.IO) {
-                    try {
-                        val verif = verifier.verify(token)
-                        if (verif == null) {
-                            call.response.status(HttpStatusCode.Forbidden)
-                            cont.resume(null)
+            withContext(Dispatchers.IO) {
+                // False positive. Blocking is OK in IO dispatcher.
+                @Suppress("BlockingMethodInNonBlockingContext")
+                val reply = GoogleAuthorizationCodeTokenRequest(
+                    ApacheHttpTransport(),
+                    GsonFactory.getDefaultInstance(),
+                    googleClientId,
+                    googleClientSecret,
+                    token,
+                    ""
+                ).execute()
+                @Suppress("BlockingMethodInNonBlockingContext")
+                val verif = reply.parseIdToken()
+                if (verif == null) {
+                    call.response.status(HttpStatusCode.Forbidden)
+                    null
+                } else {
+
+                    val gId = verif.payload.subject
+                    transaction {
+                        val existingUser = User.idFromGoogle(gId)
+                        if (existingUser != null) {
+                            call.response.status(HttpStatusCode.OK)
+                            existingUser
                         } else {
-                            val gId = verif.payload.subject
-                            transaction {
-                                val existingUser = User.idFromGoogle(gId)
-                                if (existingUser != null) {
-                                    call.response.status(HttpStatusCode.OK)
-                                    cont.resume(existingUser)
-                                } else {
-                                    val newUser = verifyInsert {
-                                        Users.insert {
-                                            it[status] = "SEEKING"
-                                        }
-                                    }.first()[Users.id]
-                                    verifyInsert {
-                                        Registrations.insert { r ->
-                                            r[googleId] = gId
-                                            r[userId] = newUser
-                                        }
-                                    }
-                                    call.response.status(HttpStatusCode.Created)
-                                    cont.resume(newUser)
-                                }
-                            }
+                            call.response.status(HttpStatusCode.Created)
+                            User.registerNewUser(reply.accessToken)
                         }
-                    } catch (t: Throwable) {
-                        cont.resumeWithException(t)
                     }
                 }
             }
@@ -95,6 +96,7 @@ fun Route.users() = route("user") {
 
     put("/subscription/{tag}") {
         process(respond = null) { (params, caller) ->
+            require(caller > 0)
             val tag = requireNotNull(params["tag"]).str
             transaction {
                 Subscriptions.insert {
@@ -107,6 +109,7 @@ fun Route.users() = route("user") {
 
     delete("/subscription/{tag}") {
         process(respond = null) { (params, caller) ->
+            require(caller > 0)
             val tag = requireNotNull(params["tag"]).str
             transaction {
                 Subscriptions.deleteWhere {

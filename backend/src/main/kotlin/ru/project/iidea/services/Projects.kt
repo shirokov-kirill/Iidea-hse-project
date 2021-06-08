@@ -13,6 +13,7 @@ fun Route.projects() = route("project") {
 
     put {
         process { (params, caller) ->
+            require(caller > 0)
             transaction {
                 verifyInsert {
                     Projects.insert {
@@ -55,6 +56,7 @@ fun Route.projects() = route("project") {
 
         post {
             process(respond = null) { (params, caller) ->
+                require(caller > 0)
                 val id = requireNotNull(params["id"]).long
                 val project = Project.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
                 if (project.hostId != caller) {
@@ -73,6 +75,7 @@ fun Route.projects() = route("project") {
 
         delete {
             process(respond = null) { (params, caller) ->
+                require(caller > 0)
                 val id = requireNotNull(params["id"]).long
                 val project = Project.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
                 if (project.hostId != caller) {
@@ -100,6 +103,7 @@ fun Route.projects() = route("project") {
 
             put {
                 process { (params, caller) ->
+                    require(caller > 0)
                     val id = requireNotNull(params["id"]).long
                     transaction {
                         verifyInsert {
