@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
@@ -55,7 +56,9 @@ public class RegistrationFragment extends Fragment {
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("621982323742-2oselqnv8k1ce2qvrbcqnjjameejaihc.apps.googleusercontent.com")
+                .requestServerAuthCode("621982323742-2oselqnv8k1ce2qvrbcqnjjameejaihc.apps.googleusercontent.com")
                 .requestEmail()
+                .requestScopes(new Scope("https://www.googleapis.com/auth/user.phonenumbers.read"))
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this.getContext(), gso);
@@ -93,9 +96,9 @@ public class RegistrationFragment extends Fragment {
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String idToken = account.getIdToken();
+            String authCode = account.getServerAuthCode();
             IideaBackendService server = IideaBackend.getInstance().getService();
-            server.auth(idToken).enqueue(new Callback<Long>() {
+            server.auth(authCode).enqueue(new Callback<Long>() {
                 @Override
                 public void onResponse(Call<Long> call, Response<Long> response) {
                     if(response.isSuccessful() && response.body() != null){

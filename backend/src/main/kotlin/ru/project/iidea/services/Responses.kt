@@ -2,7 +2,6 @@ package ru.project.iidea.services
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.apache.v2.ApacheHttpTransport
-import com.google.api.client.json.jackson2.JacksonFactory
 import io.ktor.http.*
 import io.ktor.routing.*
 import org.jetbrains.exposed.sql.deleteWhere
@@ -29,6 +28,7 @@ fun Route.responses() = route("response") {
 
         delete {
             process(respond = null) { (params, caller) ->
+                require(caller > 0)
                 val id = requireNotNull(params["id"]).long
                 val response = Response.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
                 val project = Project.fromDatabase(response.from) ?: return@process HttpStatusCode.Gone

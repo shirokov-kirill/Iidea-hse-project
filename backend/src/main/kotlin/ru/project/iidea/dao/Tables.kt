@@ -4,11 +4,10 @@ import org.jetbrains.exposed.sql.Table
 
 object Registrations : Table("registrations") {
 
-    val googleId = text("id")
+    val googleId = text("googleId")
     val userId = long("id") references Users.id
 
-    override val primaryKey = PrimaryKey(googleId)
-
+    override val primaryKey = PrimaryKey(userId)
 }
 
 object Users : Table("users") {
@@ -16,6 +15,10 @@ object Users : Table("users") {
 
     val id = long("id").autoIncrement()
     val status = varchar("status", 255)
+    val name = text("name")
+    val surname = text("surname")
+    val email = text("email")
+    val description = text("description")
 
     override val primaryKey = PrimaryKey(id)
 }

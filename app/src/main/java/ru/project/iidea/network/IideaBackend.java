@@ -25,7 +25,7 @@ public class IideaBackend {
     }
 
     private IideaBackend() {
-        userID = 0L;
+        userID = -1L;
         client = new OkHttpClient.Builder()
                 .authenticator((route, response) -> {
                     Request req = response.request();
