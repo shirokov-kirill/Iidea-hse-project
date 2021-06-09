@@ -63,8 +63,6 @@ public class ProfileFragmentEditing extends Fragment {
                         User myUser = response.body();
                         String fullName = myUser.getSurname() + ' ' + myUser.getName();
                         headLineName.setText(fullName);//отсюда
-                        TextView dateOfBirth = view.findViewById(R.id.profileDateOfBirth);
-                        dateOfBirth.setText(getString(R.string.Birthday, myUser.getDateOfBirth()));
                         final TextView state = view.findViewById(R.id.profileUserStatus);
                         state.setText(getString(R.string.Status, myUser.getState().toString()));
                         final Button statusButton = view.findViewById(R.id.profileUserStatusChangeButton);
@@ -96,10 +94,10 @@ public class ProfileFragmentEditing extends Fragment {
                             }
                         });
                         TextView email = view.findViewById(R.id.profileEmail);
-                        email.setText(getString(R.string.Email, myUser.getEmail()));
+                        email.setText(myUser.getEmail());
                         email.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                         TextView phoneNumber = view.findViewById(R.id.profilePhoneNumber);
-                        phoneNumber.setText(getString(R.string.PhoneNumber, myUser.getPhoneNumber()));
+                        phoneNumber.setText(myUser.getPhoneNumber());
                         phoneNumber.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                         Button downloadCharactButton = view.findViewById(R.id.profileUploadResumeButton);
                         downloadCharactButton.setOnClickListener(new View.OnClickListener() {
