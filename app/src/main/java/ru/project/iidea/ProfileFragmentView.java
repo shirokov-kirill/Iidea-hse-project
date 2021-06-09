@@ -61,9 +61,9 @@ public class ProfileFragmentView extends Fragment {
                     String fullName = user.getSurname() + ' ' + user.getName();
                     headLineName.setText(fullName);
                     headLineName.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    TextView dateOfBirth = view.findViewById(R.id.profileViewDateOfBirthHead);
-                    dateOfBirth.setText(getString(R.string.Birthday, user.getDateOfBirth()));
-                    dateOfBirth.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    TextView phoneNumber = view.findViewById(R.id.phoneNumberNotHost);
+                    phoneNumber.setText((user.getPhoneNumber().equals("")) ? "Пусто" : user.getPhoneNumber());
+                    phoneNumber.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     TextView messaging = view.findViewById(R.id.writeMessageTextButton);
                     messaging.setText(Html.fromHtml("<a href=\"mailto:" + user.getEmail() + "\">Отправить e-mail</a>", 0));
                     messaging.setMovementMethod(LinkMovementMethod.getInstance());
@@ -71,7 +71,7 @@ public class ProfileFragmentView extends Fragment {
                     state.setText(getString(R.string.Status, user.getState().toString()));
                     state.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     TextView description = view.findViewById(R.id.profileViewDescription);
-                    description.setText(user.getDescription());
+                    description.setText((user.getDescription().equals("")) ? "Пусто" : user.getDescription());
                     description.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
                     ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
