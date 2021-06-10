@@ -425,10 +425,10 @@ public class MainScreenActivity
     }
 
     @Override
-    public void onUserIdClicked(final long userID) {
+    public void onUserIdClicked(User user) {
         ProfileFragmentView profileFragmentView = new ProfileFragmentView();
         Bundle bundle = new Bundle();
-        bundle.putLong("userID", userID);
+        bundle.putSerializable("user", user);
         profileFragmentView.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.main_screen_activity_fragment_placement, profileFragmentView, "showHostProfile").addToBackStack(null).commit();
     }
