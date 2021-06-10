@@ -20,7 +20,7 @@ fun Route.responses() = route("response") {
     route("{id}") {
 
         get {
-            process { (params, _) ->
+            process(notFoundForEmpty = false) { (params, _) ->
                 val id = requireNotNull(params["id"]).long
                 Response.fromDatabase(id)
             }
