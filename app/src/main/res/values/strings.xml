@@ -70,4 +70,6 @@
     <string name="Delete">Удалить</string>
     <string name="Unsubscribe">Отписаться</string>
     <string name="WriteMessage">Написать сообщение</string>
+    <string name="emailSign">Эл. почта</string>
+    <string name="PhoneSign">Телефон</string>
 </resources>

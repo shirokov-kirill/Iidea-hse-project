@@ -1,11 +1,13 @@
 package ru.project.iidea;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +49,9 @@ public class ResponsesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         LinearLayout profileListOfSubs = view.findViewById(R.id.responsesOnMyProjects);
+        float scale = getResources().getDisplayMetrics().density;
+        profileListOfSubs.setPadding((int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f),
+                (int) (8 * scale + 0.5f), (int) (8 * scale + 0.5f));
         List<Long> projectIDs = (List<Long>) this.getArguments().getSerializable("userProjectIDs");
         IideaBackendService server = IideaBackend.getInstance().getService();
         if(!projectIDs.isEmpty()){
@@ -57,6 +62,9 @@ public class ResponsesFragment extends Fragment {
                         public void onResponse(@NonNull Call<List<Long>> call, @NonNull Response<List<Long>> response) {
                             if(response.isSuccessful() && response.body() != null){
                                 List<Long> responseIDs = response.body();
+                                if(responseIDs.isEmpty()){
+                                    return;
+                                }
                                 for (long responseID : responseIDs){
                                     server.response(responseID).enqueue(new Callback<BackendResponse>() {
                                         @Override
@@ -76,6 +84,13 @@ public class ResponsesFragment extends Fragment {
                                                     }
                                                 });
                                                 profileListOfSubs.addView(textView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                                View separator = new View(getContext());
+                                                separator.setBackgroundColor(Color.parseColor("#808080"));
+                                                LinearLayout.LayoutParams separatorLayoutParams = new LinearLayout.LayoutParams(
+                                                        ViewGroup.LayoutParams.MATCH_PARENT, (int) (scale + 0.5f));
+                                                separatorLayoutParams.setMargins(0, (int) (10 * scale + 0.5f), 0, (int) (10 * scale + 0.5f));
+                                                separator.setLayoutParams(separatorLayoutParams);
+                                                profileListOfSubs.addView(separator);
                                             }
                                         }
 
@@ -92,7 +107,7 @@ public class ResponsesFragment extends Fragment {
 
                         @Override
                         public void onFailure(@NonNull Call<List<Long>> call, @NonNull Throwable t) {
-
+                            activity.showToast("Error while uploading responses.");
                         }
                     });
                 }
