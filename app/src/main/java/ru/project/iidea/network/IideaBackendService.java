@@ -15,6 +15,13 @@ public interface IideaBackendService extends Serializable {
     @Headers("Content-Type: text/plain")
     Call<Long> auth(@Body String token);
 
+    @POST("user")
+    Call<Void> updateUser(@Body UserUpdateRequest req);
+
+    default Call<Void> updateUser(String description, String status, String phone) {
+        return updateUser(new UserUpdateRequest(description, status, phone));
+    }
+
     @GET("user/{id}")
     Call<User> user(@Path("id") long userId);
 

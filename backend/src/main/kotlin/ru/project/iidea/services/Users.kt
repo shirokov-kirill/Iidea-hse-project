@@ -12,10 +12,7 @@ import io.ktor.routing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.project.iidea.config
 import ru.project.iidea.dao.*
@@ -87,7 +84,7 @@ fun Route.users() = route("user") {
             val user = User.fromDatabase(id) ?: return@process null
             transaction {
                 Projects.slice(Projects.id)
-                    .select { Projects.type.inList(user.subscriptions) }
+                    .select { Projects.type.inList(user.subscriptions) and not(Projects.host.eq(id)) }
                     .toList()
                     .map { it[Projects.id] }
             }
@@ -123,6 +120,19 @@ fun Route.users() = route("user") {
         process { (params, _) ->
             val id = requireNotNull(params["id"]).long
             Responses.slice(Responses.id).select { Responses.from.eq(id) }.map { it[Responses.id] }.toList()
+        }
+    }
+
+    post {
+        process { (params, caller) ->
+            require(caller > 0)
+            transaction {
+                Users.update({ Users.id.eq(caller) }) {
+                    params["status"]?.str?.let { v -> it[status] = v }
+                    params["description"]?.str?.let { v -> it[description] = v }
+                    params["phone"]?.str?.let { v -> it[phone] = v }
+                }
+            }
         }
     }
 }
