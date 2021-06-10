@@ -22,16 +22,6 @@ public class MainActivity extends BaseActivity implements RegistrationFragmentIn
         currentTag = "registrationFragment";
     }
 
-    public void onClick(View view) {
-        if (NetworkConnectionChecker.isNetworkAvailable(this)) {
-            Intent intent = new Intent(this, MainScreenActivity.class);
-            intent.putExtra("userID", 1L);
-            startActivity(intent);
-        } else {
-            showToast("No internet connection.");
-        }
-    }
-
     @Override
     public void onRegistrationClick(long id){
         Intent intent = new Intent(this, MainScreenActivity.class);
