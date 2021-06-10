@@ -19,6 +19,7 @@ object Users : Table("users") {
     val surname = text("surname")
     val email = text("email")
     val description = text("description")
+    val phone = text("phone")
 
     override val primaryKey = PrimaryKey(id)
 }

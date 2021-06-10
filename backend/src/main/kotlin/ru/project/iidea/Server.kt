@@ -37,11 +37,14 @@ private val connectUrl =
 
 data class UserPrincipal(val id: Long, val token: GoogleIdToken?) : Principal
 
-fun main() {
+fun main(args: Array<String>) {
     Database.connect(connectUrl, "com.mysql.cj.jdbc.Driver", config["user"].str, config["password"].str)
-//    transaction {
-//        SchemaUtils.create(Users, Projects, Subscriptions, Responses, Registrations)
-//    }
+    if("--drop" in args) {
+        transaction {
+            SchemaUtils.drop(Users, Projects, Subscriptions, Responses, Registrations)
+            SchemaUtils.create(Users, Projects, Subscriptions, Responses, Registrations)
+        }
+    }
     embeddedServer(Netty, 8000) {
         install(ContentNegotiation) {
             gson {

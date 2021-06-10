@@ -33,26 +33,37 @@ data class User(
 ) {
 
     constructor(db: List<ResultRow>) : this(
-        db.first()[Users.id],
-        db.first()[Users.name],
-        db.first()[Users.surname],
+        db.extract(Users.id).first(),
+        db.extract(Users.name).first(),
+        db.extract(Users.surname).first(),
         "",
-        db.first()[Users.email],
+        db.extract(Users.email).first(),
         "",
         "",
-        db.first()[Users.description],
-        db.mapNotNull { it.getOrNull(Subscriptions.subscription) }.distinct(),
-        db.first()[Users.status],
-        db.mapNotNull { it.getOrNull(Projects.id) }.distinct()
+        db.extract(Users.description).first(),
+        db.extract(Subscriptions.subscription).distinct(),
+        db.extract(Users.status).first(),
+        db.extract(Projects.id).distinct()
     )
 
 
     companion object {
 
+        private fun <T> List<ResultRow>.extract(e: Expression<T>) = mapNotNull { it.getOrNull(e) }
+
         fun fromDatabase(id: Long): User? = transaction {
 
             val res = (Users leftJoin Subscriptions leftJoin Projects)
-                .slice(Users.id, Users.status, Subscriptions.subscription, Projects.id)
+                .slice(
+                    Users.id,
+                    Users.status,
+                    Users.name,
+                    Users.surname,
+                    Users.email,
+                    Users.description,
+                    Subscriptions.subscription,
+                    Projects.id
+                )
                 .select {
                     Users.id.eq(id)
                 }.toList()
@@ -85,6 +96,7 @@ data class User(
                         it[surname] = info.familyName
                         it[email] = info.email
                         it[description] = ""
+                        it[phone] = ""
                     }
                 }.first()[Users.id]
                 verifyInsert {

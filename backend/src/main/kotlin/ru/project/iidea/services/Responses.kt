@@ -31,7 +31,7 @@ fun Route.responses() = route("response") {
                 require(caller > 0)
                 val id = requireNotNull(params["id"]).long
                 val response = Response.fromDatabase(id) ?: return@process HttpStatusCode.NotFound
-                val project = Project.fromDatabase(response.from) ?: return@process HttpStatusCode.Gone
+                val project = Project.fromDatabase(response.to) ?: return@process HttpStatusCode.Gone
                 if (response.from != caller && project.hostId != caller) {
                     return@process HttpStatusCode.Forbidden
                 }

@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "1.5.3"
+val ktorVersion = "1.6.0"
 val exposedVersion = "0.30.2"
 dependencies {
     implementation(kotlin("stdlib"))
@@ -29,6 +29,7 @@ dependencies {
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 application {
