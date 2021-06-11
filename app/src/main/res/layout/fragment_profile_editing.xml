@@ -107,9 +107,10 @@
                     android:layout_weight="2"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="21sp" />
+                    android:textSize="21sp"/>
 
                 <Button
+                    android:id="@+id/savePhoneNumberButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"

@@ -22,4 +22,28 @@ public enum UserState {
         }
         return "";
     }
+
+    public String toServerString() {
+        switch (this){
+            case SEEKING:
+                return "SEEKING";
+            case WORKING:
+                return "WORKING";
+            case NOT_SEEKING:
+                return "NOT_SEEKING";
+        }
+        return "";
+    }
+
+    public static UserState fromString(String s){
+        switch (s){
+            case "SEEKING":
+                return SEEKING;
+            case "WORKING":
+                return WORKING;
+            case "NOT_SEEKING":
+                return NOT_SEEKING;
+        }
+        return SEEKING;
+    }
 }

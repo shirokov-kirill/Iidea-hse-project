@@ -228,8 +228,26 @@ public class MainScreenActivity
 
     @Override
     public void onSaveButtonInAddUserDescriptionClicked(String newDescription){
-        getSupportFragmentManager().popBackStack();
-        //TODO отправить описание на сервер
+        if(NetworkConnectionChecker.isNetworkAvailable(this)){
+            server.updateUser(newDescription, null, null).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(response.isSuccessful()){
+                        getSupportFragmentManager().popBackStack();
+                        showToast("Описание сохранено.");
+                    } else {
+                        onFailure(call, new IOException());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    showToast("Описание не сохранено. Повторите отправку.");
+                }
+            });
+        } else {
+            showToast("No Internet connection.");
+        }
     }
 
     @Override
