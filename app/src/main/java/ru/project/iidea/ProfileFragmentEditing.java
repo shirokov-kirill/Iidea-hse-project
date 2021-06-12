@@ -160,6 +160,20 @@ public class ProfileFragmentEditing extends Fragment {
                                 activity.onAddDescriptionButtonClicked();
                             }
                         });
+                        Button saveVk = view.findViewById(R.id.saveProfileVk);
+                        saveVk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //TODO save for vk
+                            }
+                        });
+                        Button saveInst = view.findViewById(R.id.saveProfileInst);
+                        saveInst.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //TODO save for inst
+                            }
+                        });
                         LinearLayout profileListOfSubs = view.findViewById(R.id.profileListOfSubs);
                         List<ProjectType> subscribes = myUser.getSubscriptions();
                         if(!subscribes.isEmpty()){

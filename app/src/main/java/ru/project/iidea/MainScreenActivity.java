@@ -341,7 +341,7 @@ public class MainScreenActivity
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
-                        //TODO изменить стиль кнопки
+                        showToast("Отклик отправлен.");
                     } else {
                         onFailure(call, new IOException("Wrong server answer"));
                     }

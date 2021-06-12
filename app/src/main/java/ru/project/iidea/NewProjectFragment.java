@@ -75,8 +75,4 @@ public class NewProjectFragment extends Fragment {
             }
         });
     }
-
-    private int generateRandomID(){
-        return 0;//TODO
-    }
 }
