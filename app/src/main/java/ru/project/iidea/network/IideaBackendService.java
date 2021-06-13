@@ -18,8 +18,8 @@ public interface IideaBackendService extends Serializable {
     @POST("user")
     Call<Void> updateUser(@Body UserUpdateRequest req);
 
-    default Call<Void> updateUser(String description, String status, String phone) {
-        return updateUser(new UserUpdateRequest(description, status, phone));
+    default Call<Void> updateUser(String description, String status, String phone, String vk, String inst) {
+        return updateUser(new UserUpdateRequest(description, status, phone, vk, inst));
     }
 
     @GET("user/{id}")
