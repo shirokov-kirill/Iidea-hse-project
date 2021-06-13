@@ -29,7 +29,9 @@ data class User(
     val description: String,
     val subscriptions: List<String>,
     val state: String,
-    val projects: List<Long>
+    val projects: List<Long>,
+    val vk: String,
+    val inst: String,
 ) {
 
     constructor(db: List<ResultRow>) : this(
@@ -39,11 +41,13 @@ data class User(
         "",
         db.extract(Users.email).first(),
         "",
-        "",
+        db.extract(Users.phone).first(),
         db.extract(Users.description).first(),
         db.extract(Subscriptions.subscription).distinct(),
         db.extract(Users.status).first(),
-        db.extract(Projects.id).distinct()
+        db.extract(Projects.id).distinct(),
+        db.extract(Users.vk).first(),
+        db.extract(Users.inst).first()
     )
 
 
@@ -61,6 +65,7 @@ data class User(
                     Users.surname,
                     Users.email,
                     Users.description,
+                    Users.phone,
                     Subscriptions.subscription,
                     Projects.id
                 )

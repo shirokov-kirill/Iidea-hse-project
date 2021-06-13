@@ -83,13 +83,14 @@ fun Route.projects() = route("project") {
                 }
                 transaction {
                     Projects.deleteWhere { Projects.id.eq(id) }
+                    Responses.deleteWhere { Responses.to.eq(id) }
                 }
             }
         }
 
         route("responses") {
             get {
-                process { (params, _) ->
+                process(notFoundForEmpty = false) { (params, _) ->
                     val id = requireNotNull(params["id"]).long
                     transaction {
                         Responses

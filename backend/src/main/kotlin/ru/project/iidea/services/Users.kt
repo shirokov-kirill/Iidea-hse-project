@@ -131,6 +131,8 @@ fun Route.users() = route("user") {
                     params["status"]?.str?.let { v -> it[status] = v }
                     params["description"]?.str?.let { v -> it[description] = v }
                     params["phone"]?.str?.let { v -> it[phone] = v }
+                    params["vk"]?.str?.let { v -> it[vk] = v }
+                    params["inst"]?.str?.let { v -> it[inst] = v }
                 }
             }
         }
