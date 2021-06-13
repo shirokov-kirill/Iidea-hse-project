@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -74,19 +75,45 @@ public class ProfileFragmentEditing extends Fragment {
                                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem item) {
+                                        String newState = "";
                                         switch (item.getItemId()) {
                                             case R.id.userStatus_seeking:
+                                                newState = "SEEKING";
                                                 state.setText(getString(R.string.Status, getString(R.string.userStatus_seeking)));
                                                 break;
                                             case R.id.userStatus_notSeeking:
+                                                newState = "NOT_SEEKING";
                                                 state.setText(getString(R.string.Status, getString(R.string.userStatus_notSeeking)));
                                                 break;
                                             case R.id.userStatus_working:
+                                                newState = "WORKING";
                                                 state.setText(getString(R.string.Status, getString(R.string.userStatus_working)));
+                                                break;
                                             default:
                                                 return false;
                                         }
-                                        //TODO отправить информацию на сервер
+                                        final String s = newState;
+                                        if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
+                                            server.updateUser(null, newState, null).enqueue(new Callback<Void>() {
+                                                @Override
+                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                    if(response.isSuccessful()){
+                                                        myUser.setState(UserState.fromString(s));
+                                                        activity.showToast("Успешно изменено.");
+                                                    } else {
+                                                        onFailure(call, new IOException());
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                    state.setText(getString(R.string.Status, myUser.getState().toString()));
+                                                    activity.showToast("Произошла ошибка. Выберите статус заново.");
+                                                }
+                                            });
+                                        } else {
+                                            activity.showToast("No Internet connection.");
+                                        }
                                         return true;
                                     }
                                 });
@@ -99,11 +126,52 @@ public class ProfileFragmentEditing extends Fragment {
                         TextView phoneNumber = view.findViewById(R.id.profilePhoneNumber);
                         phoneNumber.setText(myUser.getPhoneNumber());
                         phoneNumber.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                        Button button = view.findViewById(R.id.savePhoneNumberButton);
+                        EditText editText = view.findViewById(R.id.profilePhoneNumber);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
+                                    server.updateUser(null, null, editText.getText().toString()).enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                            if(response.isSuccessful()){
+                                                myUser.setPhoneNumber(editText.getText().toString());
+                                                activity.showToast("Успешно изменено.");
+                                            } else {
+                                                onFailure(call, new IOException());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable t) {
+                                            activity.showToast("Произошла ошибка. Попробуйте сохранить номер заново.");
+                                        }
+                                    });
+                                } else {
+                                    activity.showToast("No Internet connection.");
+                                }
+                            }
+                        });
                         Button downloadCharactButton = view.findViewById(R.id.profileUploadResumeButton);
                         downloadCharactButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 activity.onAddDescriptionButtonClicked();
+                            }
+                        });
+                        Button saveVk = view.findViewById(R.id.saveProfileVk);
+                        saveVk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //TODO save for vk
+                            }
+                        });
+                        Button saveInst = view.findViewById(R.id.saveProfileInst);
+                        saveInst.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //TODO save for inst
                             }
                         });
                         LinearLayout profileListOfSubs = view.findViewById(R.id.profileListOfSubs);
@@ -116,15 +184,15 @@ public class ProfileFragmentEditing extends Fragment {
                                 textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                                 textView.setTextSize(21);
                                 linearLayout.addView(textView);
-                                Button button = new Button(getContext());
-                                button.setText(R.string.Unsubscribe);
-                                button.setOnClickListener(new View.OnClickListener() {
+                                Button button1 = new Button(getContext());
+                                button1.setText(R.string.Unsubscribe);
+                                button1.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         activity.unsubscribeOnTag(textView.getText().toString(), linearLayout);
                                     }
                                 });
-                                linearLayout.addView(button);
+                                linearLayout.addView(button1);
                                 profileListOfSubs.addView(linearLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             }
                         }

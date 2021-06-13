@@ -13,6 +13,8 @@ public class User implements Serializable {
     private String phoneNumber;
     private String description;
     private UserState state;
+    private String vkName;
+    private String instName;
     private final List<ProjectType> subscriptions;
     private final List<Long> projects;
 
@@ -133,5 +135,21 @@ public class User implements Serializable {
 
     public long getId() {
         return id;
+    }
+
+    public void setInstName(String instName) {
+        this.instName = instName;
+    }
+
+    public void setVkName(String vkName) {
+        this.vkName = vkName;
+    }
+
+    public String getInstName() {
+        return instName;
+    }
+
+    public String getVkName() {
+        return vkName;
     }
 }

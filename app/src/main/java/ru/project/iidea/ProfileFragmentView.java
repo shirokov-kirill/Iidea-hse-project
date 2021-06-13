@@ -7,6 +7,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,6 +70,18 @@ public class ProfileFragmentView extends Fragment {
         description.setText((user.getDescription().equals("")) ? "Пусто" : user.getDescription());
         description.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
+        TextView vk = view.findViewById(R.id.profileViewVk);
+        if(!user.getVkName().equals("")){
+            vk.setText(Html.fromHtml("<a href =\"vk.com/" + user.getVkName() + "\">Перейти в ВК", 0));
+        } else {
+            vk.setText("Пусто");
+        }
+        TextView inst = view.findViewById(R.id.profileViewInst);
+        if(!user.getInstName().equals("")){
+            inst.setText(Html.fromHtml("<a href =\"instagram.com/" + user.getInstName() + "\">Перейти в Инстаграм", 0));
+        } else {
+            inst.setText("Пусто");
+        }
         ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

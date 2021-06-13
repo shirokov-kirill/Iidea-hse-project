@@ -72,4 +72,7 @@
     <string name="WriteMessage">Написать сообщение</string>
     <string name="emailSign">Эл. почта</string>
     <string name="PhoneSign">Телефон</string>
+    <string name="Socials">Соцсети</string>
+    <string name="Vk">Вконтакте</string>
+    <string name="Inst">Инстаграм</string>
 </resources>

@@ -74,5 +74,4 @@ public interface IideaBackendService extends Serializable {
     @DELETE("response/{id}")
     Call<Void> deleteResponse(@Path("id") long responseId);
 
-    //TODO Call<Void> modifyUserDescription(userId, String)
 }
