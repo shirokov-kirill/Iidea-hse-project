@@ -13,12 +13,12 @@ public class User implements Serializable {
     private String phoneNumber;
     private String description;
     private UserState state;
-    private String vkName;
-    private String instName;
+    private String vk;
+    private String inst;
     private final List<ProjectType> subscriptions;
     private final List<Long> projects;
 
-    User(long id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state, List<ProjectType> subscriptions, List<Long> projects){
+    User(long id, String surname, String name, String patronymic, String dateOfBirth, String email, String phoneNumber, String description, UserState state, List<ProjectType> subscriptions, List<Long> projects, String vk, String inst){
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -30,6 +30,8 @@ public class User implements Serializable {
         this.state = state;
         this.subscriptions = subscriptions;
         this.projects = projects;
+        this.vk = vk;
+        this.inst = inst;
     }
 
     public List<ProjectType> getSubscriptions() {
@@ -138,18 +140,18 @@ public class User implements Serializable {
     }
 
     public void setInstName(String instName) {
-        this.instName = instName;
+        this.inst = instName;
     }
 
     public void setVkName(String vkName) {
-        this.vkName = vkName;
+        this.vk = vkName;
     }
 
     public String getInstName() {
-        return instName;
+        return inst;
     }
 
     public String getVkName() {
-        return vkName;
+        return vk;
     }
 }

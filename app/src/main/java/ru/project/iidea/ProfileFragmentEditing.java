@@ -94,7 +94,7 @@ public class ProfileFragmentEditing extends Fragment {
                                         }
                                         final String s = newState;
                                         if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
-                                            server.updateUser(null, newState, null).enqueue(new Callback<Void>() {
+                                            server.updateUser(null, newState, null, null, null).enqueue(new Callback<Void>() {
                                                 @Override
                                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                                     if(response.isSuccessful()){
@@ -132,7 +132,7 @@ public class ProfileFragmentEditing extends Fragment {
                             @Override
                             public void onClick(View view) {
                                 if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
-                                    server.updateUser(null, null, editText.getText().toString()).enqueue(new Callback<Void>() {
+                                    server.updateUser(null, null, editText.getText().toString(), null, null).enqueue(new Callback<Void>() {
                                         @Override
                                         public void onResponse(Call<Void> call, Response<Void> response) {
                                             if(response.isSuccessful()){
@@ -153,6 +153,14 @@ public class ProfileFragmentEditing extends Fragment {
                                 }
                             }
                         });
+                        TextView vk = view.findViewById(R.id.profileVk);
+                        vk.setText(myUser.getVkName());
+                        vk.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                        EditText editText1 = view.findViewById(R.id.profileVk);
+                        TextView inst = view.findViewById(R.id.profileInst);
+                        inst.setText(myUser.getInstName());
+                        inst.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                        EditText editText2 = view.findViewById(R.id.profileInst);
                         Button downloadCharactButton = view.findViewById(R.id.profileUploadResumeButton);
                         downloadCharactButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -164,14 +172,52 @@ public class ProfileFragmentEditing extends Fragment {
                         saveVk.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //TODO save for vk
+                                if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
+                                    server.updateUser(null, null, null, editText1.getText().toString(), null).enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                            if(response.isSuccessful()){
+                                                myUser.setVkName(editText1.getText().toString());
+                                                activity.showToast("Успешно изменено.");
+                                            } else {
+                                                onFailure(call, new IOException());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable t) {
+                                            activity.showToast("Произошла ошибка. Попробуйте сохранить профиль Vk заново.");
+                                        }
+                                    });
+                                } else {
+                                    activity.showToast("No Internet connection.");
+                                }
                             }
                         });
                         Button saveInst = view.findViewById(R.id.saveProfileInst);
                         saveInst.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //TODO save for inst
+                                if(NetworkConnectionChecker.isNetworkAvailable(getContext())){
+                                    server.updateUser(null, null, null, null, editText2.getText().toString()).enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                            if(response.isSuccessful()){
+                                                myUser.setInstName(editText2.getText().toString());
+                                                activity.showToast("Успешно изменено.");
+                                            } else {
+                                                onFailure(call, new IOException());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable t) {
+                                            activity.showToast("Произошла ошибка. Попробуйте сохранить профиль Instagram заново.");
+                                        }
+                                    });
+                                } else {
+                                    activity.showToast("No Internet connection.");
+                                }
                             }
                         });
                         LinearLayout profileListOfSubs = view.findViewById(R.id.profileListOfSubs);

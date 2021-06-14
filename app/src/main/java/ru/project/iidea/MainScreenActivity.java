@@ -229,7 +229,7 @@ public class MainScreenActivity
     @Override
     public void onSaveButtonInAddUserDescriptionClicked(String newDescription){
         if(NetworkConnectionChecker.isNetworkAvailable(this)){
-            server.updateUser(newDescription, null, null).enqueue(new Callback<Void>() {
+            server.updateUser(newDescription, null, null, null, null).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if(response.isSuccessful()){
