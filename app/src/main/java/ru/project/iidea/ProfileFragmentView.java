@@ -72,16 +72,18 @@ public class ProfileFragmentView extends Fragment {
         LinearLayout profileProjects = view.findViewById(R.id.profileViewProjects);
         TextView vk = view.findViewById(R.id.profileViewVk);
         if(!user.getVkName().equals("")){
-            vk.setText(Html.fromHtml("<a href =\"vk.com/" + user.getVkName() + "\">Перейти в ВК", 0));
+            vk.setText(Html.fromHtml("<a href =\"https://vk.com/" + user.getVkName() + "\">Перейти в ВК", 0));
         } else {
             vk.setText("Пусто");
         }
+        vk.setMovementMethod(LinkMovementMethod.getInstance());
         TextView inst = view.findViewById(R.id.profileViewInst);
         if(!user.getInstName().equals("")){
-            inst.setText(Html.fromHtml("<a href =\"instagram.com/" + user.getInstName() + "\">Перейти в Инстаграм", 0));
+            inst.setText(Html.fromHtml("<a href =\"https://instagram.com/" + user.getInstName() + "\">Перейти в Инстаграм", 0));
         } else {
             inst.setText("Пусто");
         }
+        inst.setMovementMethod(LinkMovementMethod.getInstance());
         ImageButton backButton = view.findViewById(R.id.profileViewHeadLineBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
