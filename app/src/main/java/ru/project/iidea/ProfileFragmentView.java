@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ public class ProfileFragmentView extends Fragment {
         headLineName.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
         TextView phoneNumber = view.findViewById(R.id.phoneNumberNotHost);
         phoneNumber.setText((user.getPhoneNumber().equals("")) ? "Пусто" : user.getPhoneNumber());
+        Linkify.addLinks(phoneNumber, Linkify.PHONE_NUMBERS);
         phoneNumber.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         TextView messaging = view.findViewById(R.id.writeMessageTextButton);
         messaging.setText(Html.fromHtml("<a href=\"mailto:" + user.getEmail() + "\">Отправить e-mail</a>", 0));
