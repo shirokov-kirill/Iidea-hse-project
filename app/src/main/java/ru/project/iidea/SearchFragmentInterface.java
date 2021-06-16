@@ -7,4 +7,5 @@ public interface SearchFragmentInterface {
     void onSearchButtonClicked(List<ProjectType> types);
     void onAddSubscriptionClicked(View view, ProjectType type);
     void onBackButtonPressed();
+    void showToast(String message);
 }

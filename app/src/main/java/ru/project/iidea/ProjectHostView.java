@@ -38,9 +38,9 @@ public class ProjectHostView extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = this.getArguments();
-        final Project project = (Project) bundle.get("project");
+        Project project = (Project) bundle.getSerializable("project");
         ScrollView scrollView = view.findViewById(R.id.project_host_view_scroll_view);
-        final LinearLayout projectBlock = new LinearLayout(this.getContext());
+        LinearLayout projectBlock = new LinearLayout(this.getContext());
         projectBlock.setOrientation(LinearLayout.VERTICAL);
         TextView projectName = new TextView(this.getContext());
         LinearLayout linearLayout = new LinearLayout(this.getContext());

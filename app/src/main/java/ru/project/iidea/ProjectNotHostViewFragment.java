@@ -61,6 +61,7 @@ public class ProjectNotHostViewFragment extends Fragment {
                         textView3.setText(getString(R.string.projectType, project.getType()));
                         TextView textView4 = view.findViewById(R.id.projectNotHostViewToHost);
                         textView4.setText(getString(R.string.HostRef,response.body().getSurname() + " " + response.body().getName()));
+                        textView4.setTextColor(getResources().getColor(R.color.blue,null));
                         textView4.setClickable(true);
                         textView4.setOnClickListener(new View.OnClickListener() {
                             @Override

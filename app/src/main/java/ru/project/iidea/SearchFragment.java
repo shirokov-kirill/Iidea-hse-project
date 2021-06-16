@@ -143,7 +143,8 @@ public class SearchFragment extends Fragment {
                         }
                         @Override
                         public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-
+                            activity.onBackButtonPressed();
+                            activity.showToast("Something went wrong. Please try again.");
                         }
                     });
                 }
