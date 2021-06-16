@@ -71,7 +71,11 @@ public class NewProjectFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.onCreateNewProjectClicked(categoryButton.getText().toString(), editText1.getText().toString(), editText.getText().toString(),ProjectState.New.toString());
+                if(!categoryButton.getText().toString().equals("Выберите категорию") && !editText1.getText().toString().equals("")){
+                    activity.onCreateNewProjectClicked(categoryButton.getText().toString(), editText1.getText().toString(), editText.getText().toString(),ProjectState.New.toString());
+                } else {
+                    activity.showToast("Вы что-то не указали. Заполните данные и попробуйте ещё");
+                }
             }
         });
     }
